@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <!-- Import Fancy Font for CQI Credit -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
@@ -52,22 +52,29 @@
     </script>
 
     <!-- Header Section -->
-    <div class="bg-gradient-to-r from-slate-900 to-slate-800 py-10 shadow-2xl relative z-10 border-b-4 border-yellow-500">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 py-12 shadow-2xl relative z-10 border-b-4 border-yellow-500">
         <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
             
-            <!-- LOGO ONLY (Centered & Enormously Clear) -->
-            <!-- Path: images logo/tdmh-logo.png -->
-            <div class="inline-block relative group">
-                <div class="absolute inset-0 bg-white blur-xl opacity-20 rounded-full group-hover:opacity-30 transition duration-500"></div>
+            <!-- LOGO SECTION (Fixed Visibility) -->
+            <!-- Added white background circle so transparent logo is visible -->
+            <div class="inline-block p-4 bg-white rounded-full shadow-2xl mb-6 border-4 border-blue-100">
                 <img src="images logo/tdmh-logo.png" 
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'" 
-                     class="h-40 w-auto object-contain relative z-10 drop-shadow-2xl hover:scale-105 transition duration-500" 
+                     class="h-32 w-32 object-contain" 
                      alt="TDMH Logo">
                 
                 <!-- Fallback if image path is wrong -->
-                <div class="hidden text-white">
+                <div class="hidden text-slate-800">
                     <i class="fa-solid fa-hospital text-6xl mb-2"></i>
-                    <h1 class="text-2xl font-bold">Taytay Doctors</h1>
+                </div>
+            </div>
+
+            <!-- Title Section -->
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2">Taytay Doctors Multispecialty Hospital</h1>
+                <p class="text-yellow-400 text-sm font-bold tracking-widest uppercase mb-1">Human Resources Department</p>
+                <div class="inline-block bg-slate-700/50 px-6 py-2 rounded-full border border-slate-600 mt-2">
+                    <span class="text-slate-200 text-sm font-medium tracking-wide">Performance Evaluation Portal</span>
                 </div>
             </div>
 
@@ -126,18 +133,18 @@
         <p class="text-slate-400 text-xs mt-2">Please wait while we redirect you.</p>
     </div>
 
-    <!-- Footer with Fancy CQI Credit (UNIFIED FONT) -->
-    <footer class="bg-slate-800 text-slate-400 py-8 text-center mt-auto border-t-4 border-yellow-500">
+    <!-- Footer with Fancy CQI Credit (Fixed Font Style) -->
+    <footer class="bg-slate-800 text-slate-400 py-10 text-center mt-auto border-t-4 border-yellow-500">
         <div class="max-w-4xl mx-auto px-4">
             
             <!-- CQI CREDIT BADGE -->
-            <div class="inline-block mb-6 px-8 py-4 border border-slate-600 rounded-lg bg-slate-700/30">
-                <!-- Applied 'cqi-font' to the entire container -->
-                <div class="cqi-font text-yellow-500 text-xl tracking-wide">
-                    <span class="italic">System Optimized by</span> <span class="font-bold text-yellow-400">CQI</span>
+            <div class="inline-block mb-6 px-10 py-4 border border-slate-600 rounded-lg bg-slate-700/30">
+                <!-- Applied 'cqi-font' to entire text, removed italics -->
+                <div class="cqi-font text-yellow-500 text-2xl tracking-wide font-normal">
+                    System Optimized by <span class="font-bold text-yellow-400">CQI</span>
                 </div>
-                <div class="h-px w-full bg-slate-600 my-2"></div>
-                <p class="cqi-font text-sm uppercase tracking-widest text-slate-300 font-bold">Continuous Quality Improvement</p>
+                <div class="h-px w-full bg-slate-600 my-3"></div>
+                <p class="cqi-font text-sm uppercase tracking-[0.2em] text-slate-300 font-bold">Continuous Quality Improvement</p>
             </div>
 
             <p class="text-xs text-slate-500 font-sans">&copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.</p>
