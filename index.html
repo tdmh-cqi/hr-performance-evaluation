@@ -6,13 +6,13 @@
     <title>TDMH Performance Evaluation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <!-- Import Fancy Font for CQI Credit -->
+    <!-- Fancy Font for CQI Credit -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #e2e8f0;
-            background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+            background-color: #f1f5f9;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
             background-size: 24px 24px;
         }
         .file-card { 
@@ -23,7 +23,6 @@
             transform: translateY(-8px); 
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
         }
-        /* Apply Fancy Font to specific class */
         .cqi-font { font-family: 'Playfair Display', serif; }
         
         .loader { border-top-color: #1e3a8a; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
@@ -51,27 +50,37 @@
         }
     </script>
 
-    <!-- Header Section (White Background for Logo Clarity) -->
-    <div class="bg-white py-8 shadow-md relative z-10 border-b-4 border-yellow-500">
-        <div class="max-w-4xl mx-auto px-4 text-center">
+    <!-- Header Section -->
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 py-12 shadow-2xl relative z-10 border-b-4 border-yellow-500">
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
             
-            <!-- LOGO ONLY (No Container, No Extra Text) -->
+            <!-- LOGO ONLY (With White Background for Visibility) -->
             <!-- Path: images logo/tdmh-logo.png -->
-            <img src="images logo/tdmh-logo.png" 
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" 
-                 class="h-40 w-auto mx-auto object-contain hover:scale-105 transition duration-500" 
-                 alt="TDMH Logo">
-            
-            <!-- Fallback Text Only if Image Fails -->
-            <div class="hidden text-slate-800 mt-4">
-                <h1 class="text-3xl font-bold">Taytay Doctors Multispecialty Hospital</h1>
+            <div class="inline-block p-4 bg-white rounded-full shadow-2xl mb-4 border-4 border-blue-100">
+                <img src="images logo/tdmh-logo.png" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'" 
+                     class="h-32 w-32 object-contain" 
+                     alt="TDMH Logo">
+                
+                <!-- Fallback if image path is wrong -->
+                <div class="hidden text-slate-800">
+                    <i class="fa-solid fa-hospital text-6xl mb-2"></i>
+                </div>
+            </div>
+
+            <!-- Subtitle Only (Main Title is in Logo) -->
+            <div>
+                <p class="text-yellow-400 text-sm font-bold tracking-widest uppercase mb-1">Human Resources Department</p>
+                <div class="inline-block bg-slate-700/50 px-6 py-2 rounded-full border border-slate-600 mt-2">
+                    <span class="text-slate-200 text-sm font-medium tracking-wide">Performance Evaluation Portal</span>
+                </div>
             </div>
 
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex-grow flex items-center justify-center p-6 z-20">
+    <div class="flex-grow flex items-center justify-center p-6 z-20 -mt-6">
         <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
 
             <!-- Card 1: Annual (Teal/Slate - Professional File) -->
