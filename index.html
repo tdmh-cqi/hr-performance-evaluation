@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDMH Performance Evaluation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .btn-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .loader { border-top-color: #3498db; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative">
+
+    <!-- CONFIGURATION -->
+    <script>
+        // --- YOUR DEPLOYED BACKEND LINKS (INTEGRATED) ---
+        const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
+        const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
+        
+        function navigate(type) {
+            // Show Loading Animation
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            
+            // Redirect to the Google Web App
+            if (type === 'annual') {
+                window.location.href = API_ANNUAL;
+            } else {
+                window.location.href = API_PROBATION;
+            }
+        }
+    </script>
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-12 shadow-xl relative overflow-hidden">
+        <!-- Decorative Circle -->
+        <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-5"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center md:justify-start text-center md:text-left z-10 relative">
+            
+            <!-- LOGO SECTION -->
+            <!-- Corrected Path: Exactly as requested with single space -->
+            <div class="bg-white p-2 rounded-full shadow-lg mb-4 md:mb-0 md:mr-6 w-28 h-28 flex items-center justify-center overflow-hidden shrink-0 border-4 border-blue-100">
+                <img src="images logo/tdmh-logo.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" class="w-full h-full object-contain" alt="TDMH Logo">
+                <!-- Fallback Icon if image fails to load -->
+                <i class="fa-solid fa-hospital text-5xl text-blue-900 hidden"></i>
+            </div>
+            
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold uppercase tracking-wide text-shadow leading-tight">Taytay Doctors</h1>
+                <h2 class="text-xl md:text-2xl font-light text-blue-100">Multispecialty Hospital</h2>
+                <div class="h-1 w-20 bg-yellow-400 mt-3 mx-auto md:mx-0 rounded"></div>
+                <p class="text-blue-200 mt-2 text-sm font-medium tracking-wider uppercase">HR Performance Evaluation Portal</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow flex items-center justify-center p-6 -mt-10 z-20">
+        <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Card 1: Annual -->
+            <button onclick="navigate('annual')" class="btn-card bg-white rounded-xl shadow-lg border-t-8 border-blue-600 p-8 text-left group relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition transform group-hover:scale-110">
+                    <i class="fa-solid fa-clipboard-check text-9xl text-blue-600"></i>
+                </div>
+                
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="bg-blue-50 p-4 rounded-2xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition shadow-sm">
+                            <i class="fa-solid fa-calendar-check text-4xl"></i>
+                        </div>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Regular Employees</span>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition">Annual Evaluation</h2>
+                    <p class="text-gray-500 text-sm mb-8 leading-relaxed">
+                        Access the yearly performance review system for all regular status employees. Supports bulk processing and batch updates.
+                    </p>
+                    
+                    <div class="flex items-center text-blue-600 font-bold text-sm bg-blue-50 w-fit px-4 py-2 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition">
+                        Launch Portal <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+            </button>
+
+            <!-- Card 2: Probationary -->
+            <button onclick="navigate('probation')" class="btn-card bg-white rounded-xl shadow-lg border-t-8 border-yellow-500 p-8 text-left group relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition transform group-hover:scale-110">
+                    <i class="fa-solid fa-stopwatch text-9xl text-yellow-500"></i>
+                </div>
+
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="bg-yellow-50 p-4 rounded-2xl text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition shadow-sm">
+                            <i class="fa-solid fa-user-clock text-4xl"></i>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">3rd & 5th Month</span>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition">Probationary Evaluation</h2>
+                    <p class="text-gray-500 text-sm mb-8 leading-relaxed">
+                        For new hires under probation. Select specifically between 3rd Month or 5th Month assessment periods inside.
+                    </p>
+                    
+                    <div class="flex items-center text-yellow-600 font-bold text-sm bg-yellow-50 w-fit px-4 py-2 rounded-lg group-hover:bg-yellow-500 group-hover:text-white transition">
+                        Launch Portal <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-90 z-50 hidden flex flex-col items-center justify-center">
+        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-24 w-24 mb-4"></div>
+        <h2 class="text-xl font-bold text-gray-700">Connecting to Secure Database...</h2>
+        <p class="text-gray-500 text-sm mt-2">Please wait while we redirect you.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-xs mt-auto border-t-4 border-blue-900">
+        <div class="max-w-4xl mx-auto px-4">
+            <i class="fa-solid fa-shield-halved text-2xl mb-3 text-gray-600"></i>
+            <p class="mb-2">&copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.</p>
+            <p class="opacity-50">System Developed & Maintained by CQI Department</p>
+        </div>
+    </footer>
+
+</body>
+</html>
