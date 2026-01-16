@@ -11,18 +11,19 @@
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #f1f5f9;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-color: #cbd5e1; /* Darker Slate for Contrast */
+            background-image: radial-gradient(#94a3b8 1px, transparent 1px);
             background-size: 24px 24px;
         }
         .file-card { 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 6px solid transparent;
+            border-left: 8px solid transparent;
         }
         .file-card:hover { 
             transform: translateY(-8px); 
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
         }
+        /* Fancy Font Class */
         .cqi-font { font-family: 'Playfair Display', serif; }
         
         .loader { border-top-color: #1e3a8a; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
@@ -33,15 +34,12 @@
 
     <!-- CONFIGURATION -->
     <script>
-        // --- YOUR DEPLOYED BACKEND LINKS (INTEGRATED) ---
+        // --- YOUR DEPLOYED BACKEND LINKS ---
         const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
         
         function navigate(type) {
-            // Show Loading Animation
             document.getElementById('loading-overlay').classList.remove('hidden');
-            
-            // Redirect to the Google Web App
             if (type === 'annual') {
                 window.location.href = API_ANNUAL;
             } else {
@@ -51,40 +49,32 @@
     </script>
 
     <!-- Header Section -->
-    <div class="bg-gradient-to-r from-slate-900 to-slate-800 py-12 shadow-2xl relative z-10 border-b-4 border-yellow-500">
-        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+    <!-- WHITE BACKGROUND so the JPG Logo blends perfectly -->
+    <div class="bg-white py-8 shadow-xl relative z-10 border-b-8 border-yellow-500">
+        <div class="max-w-4xl mx-auto px-4 text-center">
             
-            <!-- LOGO ONLY (With White Background for Visibility) -->
+            <!-- LOGO ONLY (Massive, No Box, No Text) -->
             <!-- Path: images logo/tdmh-logo.png -->
-            <div class="inline-block p-4 bg-white rounded-full shadow-2xl mb-4 border-4 border-blue-100">
-                <img src="images logo/tdmh-logo.png" 
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'" 
-                     class="h-32 w-32 object-contain" 
-                     alt="TDMH Logo">
-                
-                <!-- Fallback if image path is wrong -->
-                <div class="hidden text-slate-800">
-                    <i class="fa-solid fa-hospital text-6xl mb-2"></i>
-                </div>
-            </div>
-
-            <!-- Subtitle Only (Main Title is in Logo) -->
-            <div>
-                <p class="text-yellow-400 text-sm font-bold tracking-widest uppercase mb-1">Human Resources Department</p>
-                <div class="inline-block bg-slate-700/50 px-6 py-2 rounded-full border border-slate-600 mt-2">
-                    <span class="text-slate-200 text-sm font-medium tracking-wide">Performance Evaluation Portal</span>
-                </div>
+            <img src="images logo/tdmh-logo.png" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" 
+                 class="h-48 w-auto mx-auto object-contain hover:scale-105 transition duration-500" 
+                 alt="TDMH Logo">
+            
+            <!-- Fallback Icon -->
+            <div class="hidden text-slate-800 mt-4">
+                <i class="fa-solid fa-hospital text-6xl"></i>
+                <h1 class="text-2xl font-bold mt-2">Taytay Doctors</h1>
             </div>
 
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex-grow flex items-center justify-center p-6 z-20 -mt-6">
+    <div class="flex-grow flex items-center justify-center p-6 z-20">
         <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            <!-- Card 1: Annual (Teal/Slate - Professional File) -->
-            <button onclick="navigate('annual')" class="file-card bg-white rounded-xl shadow-lg border-t-8 border-teal-600 p-8 text-left group">
+            <!-- Card 1: Annual (Teal Theme) -->
+            <button onclick="navigate('annual')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-teal-600 p-8 text-left group">
                 <div class="flex justify-between items-start mb-6">
                     <div class="bg-teal-50 p-4 rounded-xl text-teal-700 group-hover:bg-teal-600 group-hover:text-white transition shadow-sm">
                         <i class="fa-solid fa-folder-open text-4xl"></i>
@@ -102,8 +92,8 @@
                 </div>
             </button>
 
-            <!-- Card 2: Probationary (Gold/Slate - Professional File) -->
-            <button onclick="navigate('probation')" class="file-card bg-white rounded-xl shadow-lg border-t-8 border-amber-500 p-8 text-left group">
+            <!-- Card 2: Probationary (Gold Theme) -->
+            <button onclick="navigate('probation')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-amber-500 p-8 text-left group">
                 <div class="flex justify-between items-start mb-6">
                     <div class="bg-amber-50 p-4 rounded-xl text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition shadow-sm">
                         <i class="fa-solid fa-file-contract text-4xl"></i>
@@ -131,17 +121,18 @@
         <p class="text-slate-400 text-xs mt-2">Please wait while we redirect you.</p>
     </div>
 
-    <!-- Footer with Fancy CQI Credit (UNIFIED FONT) -->
-    <footer class="bg-slate-800 text-slate-400 py-10 text-center mt-auto border-t-4 border-yellow-500">
+    <!-- Footer with Fancy CQI Credit (Fixed Font Style & No Italics) -->
+    <footer class="bg-slate-800 text-slate-400 py-10 text-center mt-auto border-t-8 border-yellow-500">
         <div class="max-w-4xl mx-auto px-4">
             
             <!-- CQI CREDIT BADGE -->
             <div class="inline-block mb-6 px-10 py-4 border border-slate-600 rounded-lg bg-slate-700/30">
-                <div class="cqi-font text-yellow-500 text-2xl tracking-wide font-normal">
-                    System Optimized by <span class="font-bold text-yellow-400">CQI</span>
+                <!-- cqi-font applied, NO italics -->
+                <div class="cqi-font text-yellow-500 text-xl tracking-wide font-normal">
+                    System Optimized by <span class="font-bold text-white">CQI</span>
                 </div>
                 <div class="h-px w-full bg-slate-600 my-3"></div>
-                <p class="cqi-font text-sm uppercase tracking-[0.2em] text-slate-300 font-bold">Continuous Quality Improvement</p>
+                <p class="cqi-font text-xs uppercase tracking-[0.2em] text-slate-300 font-bold">Continuous Quality Improvement</p>
             </div>
 
             <p class="text-xs text-slate-500 font-sans">&copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.</p>
