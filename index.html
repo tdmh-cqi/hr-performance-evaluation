@@ -6,7 +6,6 @@
     <title>TDMH Performance Evaluation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <!-- Fancy Font for CQI Credit -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -44,10 +43,8 @@
 </head>
 <body class="min-h-screen flex flex-col relative">
 
-    <!-- CONFIGURATION -->
     <script>
-        // --- YOUR DEPLOYED BACKEND LINKS ---
-        // If you created new deployments, update these links!
+        // --- YOUR DEPLOYED BACKEND LINKS (INTEGRATED) ---
         const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
         
@@ -79,19 +76,14 @@
         }
     </script>
 
-    <!-- Header Section -->
-    <!-- WHITE BACKGROUND so the JPG Logo blends perfectly -->
     <div class="bg-white py-8 shadow-xl relative z-10 border-b-8 border-yellow-500">
         <div class="max-w-4xl mx-auto px-4 text-center">
             
-            <!-- LOGO ONLY (Massive, No Box, No Text) -->
-            <!-- Path: images logo/tdmh-logo.png -->
             <img src="images logo/tdmh-logo.png" 
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" 
                  class="h-48 w-auto mx-auto object-contain hover:scale-105 transition duration-500" 
                  alt="TDMH Logo">
             
-            <!-- Fallback Icon -->
             <div class="hidden text-slate-800 mt-4">
                 <i class="fa-solid fa-hospital text-6xl"></i>
                 <h1 class="text-2xl font-bold mt-2">Taytay Doctors</h1>
@@ -100,11 +92,9 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="flex-grow flex items-center justify-center p-6 z-20">
         <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            <!-- Card 1: Annual (Teal Theme) -->
             <button onclick="openSystem('annual')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-teal-600 p-8 text-left group">
                 <div class="flex justify-between items-start mb-6">
                     <div class="bg-teal-50 p-4 rounded-xl text-teal-700 group-hover:bg-teal-600 group-hover:text-white transition shadow-sm">
@@ -123,7 +113,6 @@
                 </div>
             </button>
 
-            <!-- Card 2: Probationary (Gold Theme) -->
             <button onclick="openSystem('probation')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-amber-500 p-8 text-left group">
                 <div class="flex justify-between items-start mb-6">
                     <div class="bg-amber-50 p-4 rounded-xl text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition shadow-sm">
@@ -145,12 +134,9 @@
         </div>
     </div>
 
-    <!-- APP FRAME (The Iframe Container) -->
     <div id="app-frame-container">
-        <!-- Iframe Header with Back Button -->
         <div class="bg-slate-900 text-white p-3 flex justify-between items-center shadow-md">
             <div class="flex items-center">
-                <!-- Small Logo in App Bar -->
                 <img src="images logo/tdmh-logo.png" class="h-8 w-auto mr-3 bg-white rounded p-1">
                 <span class="font-bold text-sm tracking-wide">Portal Active</span>
             </div>
@@ -159,21 +145,17 @@
             </button>
         </div>
 
-        <!-- Loader inside Iframe Area -->
         <div id="frame-loader" class="absolute inset-0 top-12 flex flex-col items-center justify-center bg-gray-50 z-40">
             <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
             <p class="text-gray-500 text-sm font-bold animate-pulse">Establishing Secure Connection...</p>
         </div>
 
-        <!-- The App Itself -->
         <iframe id="app-frame" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads"></iframe>
     </div>
 
-    <!-- Footer with Fancy CQI Credit (UNIFIED FONT) -->
     <footer class="bg-slate-800 text-slate-400 py-10 text-center mt-auto border-t-8 border-yellow-500">
         <div class="max-w-4xl mx-auto px-4">
             
-            <!-- CQI CREDIT BADGE -->
             <div class="inline-block mb-6 px-10 py-4 border border-slate-600 rounded-lg bg-slate-700/30">
                 <div class="cqi-font text-yellow-500 text-xl tracking-wide font-normal">
                     System Optimized by <span class="font-bold text-white">CQI</span>
