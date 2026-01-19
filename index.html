@@ -44,15 +44,28 @@
 <body class="min-h-screen flex flex-col relative">
 
     <script>
-        // --- YOUR DEPLOYED BACKEND LINKS (INTEGRATED) ---
-        const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
-        const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
+        // =================================================================
+        // ⚠️ CONFIGURATION: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URLS HERE
+        // =================================================================
+        const API_ANNUAL = "PASTE_YOUR_ANNUAL_WEB_APP_URL_HERE";
+        const API_PROBATION = "PASTE_YOUR_PROBATIONARY_WEB_APP_URL_HERE";
+        // =================================================================
         
         function openSystem(type) {
             const container = document.getElementById('app-frame-container');
             const frame = document.getElementById('app-frame');
             const loader = document.getElementById('frame-loader');
-            const url = (type === 'annual') ? API_ANNUAL : API_PROBATION;
+            
+            // Determine URL
+            let url = "";
+            if (type === 'annual') url = API_ANNUAL;
+            else if (type === 'probation') url = API_PROBATION;
+
+            // Validation
+            if (!url || url.includes("PASTE_YOUR")) {
+                alert("Configuration Error: Please update the Web App URL in index.html line 46/47.");
+                return;
+            }
 
             // Show Container
             container.style.display = 'flex';
@@ -79,11 +92,13 @@
     <div class="bg-white py-8 shadow-xl relative z-10 border-b-8 border-yellow-500">
         <div class="max-w-4xl mx-auto px-4 text-center">
             
-            <img src="images logo/tdmh-logo.png" 
+            <!-- LOGO: Uses GitHub Raw Path -->
+            <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" 
                  class="h-48 w-auto mx-auto object-contain hover:scale-105 transition duration-500" 
                  alt="TDMH Logo">
             
+            <!-- FALLBACK IF IMAGE FAILS -->
             <div class="hidden text-slate-800 mt-4">
                 <i class="fa-solid fa-hospital text-6xl"></i>
                 <h1 class="text-2xl font-bold mt-2">Taytay Doctors</h1>
@@ -95,6 +110,7 @@
     <div class="flex-grow flex items-center justify-center p-6 z-20">
         <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
 
+            <!-- ANNUAL CARD -->
             <button onclick="openSystem('annual')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-teal-600 p-8 text-left group">
                 <div class="flex justify-between items-start mb-6">
                     <div class="bg-teal-50 p-4 rounded-xl text-teal-700 group-hover:bg-teal-600 group-hover:text-white transition shadow-sm">
@@ -113,6 +129,7 @@
                 </div>
             </button>
 
+            <!-- PROBATIONARY CARD -->
             <button onclick="openSystem('probation')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-amber-500 p-8 text-left group">
                 <div class="flex justify-between items-start mb-6">
                     <div class="bg-amber-50 p-4 rounded-xl text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition shadow-sm">
@@ -134,10 +151,11 @@
         </div>
     </div>
 
+    <!-- IFRAME OVERLAY -->
     <div id="app-frame-container">
         <div class="bg-slate-900 text-white p-3 flex justify-between items-center shadow-md">
             <div class="flex items-center">
-                <img src="images logo/tdmh-logo.png" class="h-8 w-auto mr-3 bg-white rounded p-1">
+                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-8 w-auto mr-3 bg-white rounded p-1">
                 <span class="font-bold text-sm tracking-wide">Portal Active</span>
             </div>
             <button onclick="closeSystem()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded flex items-center transition">
@@ -153,6 +171,7 @@
         <iframe id="app-frame" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads"></iframe>
     </div>
 
+    <!-- FOOTER -->
     <footer class="bg-slate-800 text-slate-400 py-10 text-center mt-auto border-t-8 border-yellow-500">
         <div class="max-w-4xl mx-auto px-4">
             
