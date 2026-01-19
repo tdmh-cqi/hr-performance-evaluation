@@ -10,7 +10,7 @@
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #cbd5e1; /* Darker Slate for Contrast */
+            background-color: #cbd5e1; 
             background-image: radial-gradient(#94a3b8 1px, transparent 1px);
             background-size: 24px 24px;
             overflow-x: hidden;
@@ -23,7 +23,6 @@
             transform: translateY(-8px); 
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
         }
-        /* Fancy Font Class */
         .cqi-font { font-family: 'Playfair Display', serif; }
         
         .loader { border-top-color: #1e3a8a; -webkit-animation: spinner 1.0s linear infinite; animation: spinner 1.0s linear infinite; }
@@ -47,8 +46,10 @@
         // =================================================================
         // ⚠️ CONFIGURATION: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URLS HERE
         // =================================================================
-        const API_ANNUAL = "PASTE_YOUR_ANNUAL_WEB_APP_URL_HERE";
-        const API_PROBATION = "PASTE_YOUR_PROBATIONARY_WEB_APP_URL_HERE";
+        
+        const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
+        const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
+        
         // =================================================================
         
         function openSystem(type) {
@@ -61,9 +62,9 @@
             if (type === 'annual') url = API_ANNUAL;
             else if (type === 'probation') url = API_PROBATION;
 
-            // Validation
+            // Validation check to prevent the error you saw
             if (!url || url.includes("PASTE_YOUR")) {
-                alert("Configuration Error: Please update the Web App URL in index.html line 46/47.");
+                alert("⚠️ SETUP REQUIRED ⚠️\n\nYou have not pasted the Web App URLs in the index.html file yet.\n\n1. Open index.html\n2. Go to lines 46 & 47\n3. Replace 'PASTE_YOUR...' with your actual Google Script URLs.");
                 return;
             }
 
