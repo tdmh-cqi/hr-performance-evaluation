@@ -3,190 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TDMH Performance Evaluation</title>
+    <title>TDMH Performance Evaluation Portal</title>
+    
+    <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
+        /* CUSTOM STYLES */
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #cbd5e1; 
-            background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+            background-color: #f1f5f9; 
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
             background-size: 24px 24px;
-            overflow-x: hidden;
         }
-        .file-card { 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 8px solid transparent;
-        }
-        .file-card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
-        }
-        .cqi-font { font-family: 'Playfair Display', serif; }
         
-        .loader { border-top-color: #1e3a8a; -webkit-animation: spinner 1.0s linear infinite; animation: spinner 1.0s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .brand-font { font-family: 'Playfair Display', serif; }
 
-        /* APP MODE STYLE (Full Screen Iframe) */
-        #app-frame-container {
-            display: none;
+        /* CARD HOVER EFFECTS */
+        .portal-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left-width: 8px;
+        }
+        .portal-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* IFRAME FULLSCREEN OVERLAY */
+        #app-overlay {
+            display: none; /* Hidden by default */
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff;
+            inset: 0;
             z-index: 50;
+            background: white;
             flex-direction: column;
         }
-        iframe { width: 100%; height: 100%; border: none; }
+        
+        /* SPINNER ANIMATION */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .spinner { animation: spin 1s linear infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col relative">
+<body class="min-h-screen flex flex-col">
 
+    <!-- ========================================================================= -->
+    <!--                       CONFIGURATION ZONE                                  -->
+    <!--           ACTIVE GOOGLE SCRIPT WEB APP URLS                               -->
+    <!-- ========================================================================= -->
     <script>
-        // =================================================================
-        // ⚠️ CONFIGURATION: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URLS HERE
-        // =================================================================
-        
         const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
-        
-        // =================================================================
-        
-        function openSystem(type) {
-            const container = document.getElementById('app-frame-container');
-            const frame = document.getElementById('app-frame');
-            const loader = document.getElementById('frame-loader');
-            
-            // Determine URL
-            let url = "";
-            if (type === 'annual') url = API_ANNUAL;
-            else if (type === 'probation') url = API_PROBATION;
-
-            // Validation check to prevent the error you saw
-            if (!url || url.includes("PASTE_YOUR")) {
-                alert("⚠️ SETUP REQUIRED ⚠️\n\nYou have not pasted the Web App URLs in the index.html file yet.\n\n1. Open index.html\n2. Go to lines 46 & 47\n3. Replace 'PASTE_YOUR...' with your actual Google Script URLs.");
-                return;
-            }
-
-            // Show Container
-            container.style.display = 'flex';
-            loader.style.display = 'flex';
-            
-            // Load URL into Iframe
-            frame.src = url;
-            
-            // Hide loader when iframe loads
-            frame.onload = function() {
-                loader.style.display = 'none';
-            };
-        }
-
-        function closeSystem() {
-            // Hide Container & Reset Iframe
-            document.getElementById('app-frame-container').style.display = 'none';
-            document.getElementById('app-frame').src = 'about:blank';
-            // Reload page to refresh state
-            location.reload();
-        }
     </script>
+    <!-- ========================================================================= -->
 
-    <div class="bg-white py-8 shadow-xl relative z-10 border-b-8 border-yellow-500">
-        <div class="max-w-4xl mx-auto px-4 text-center">
+
+    <!-- HERO HEADER -->
+    <header class="bg-white shadow-xl border-b-4 border-yellow-500 relative z-10">
+        <div class="max-w-5xl mx-auto px-4 py-8 text-center">
             
-            <!-- LOGO: Uses GitHub Raw Path -->
-            <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" 
-                 class="h-48 w-auto mx-auto object-contain hover:scale-105 transition duration-500" 
-                 alt="TDMH Logo">
-            
-            <!-- FALLBACK IF IMAGE FAILS -->
-            <div class="hidden text-slate-800 mt-4">
-                <i class="fa-solid fa-hospital text-6xl"></i>
-                <h1 class="text-2xl font-bold mt-2">Taytay Doctors</h1>
+            <!-- LOGO AREA -->
+            <div class="mb-4">
+                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
+                     alt="TDMH Logo" 
+                     class="h-24 md:h-32 w-auto mx-auto object-contain hover:opacity-90 transition"
+                     onerror="this.style.display='none'; document.getElementById('text-logo').classList.remove('hidden');">
+                
+                <!-- Fallback Text Logo if Image Fails -->
+                <div id="text-logo" class="hidden text-blue-900">
+                    <i class="fa-solid fa-hospital text-5xl mb-2"></i>
+                    <h1 class="text-2xl font-bold">Taytay Doctors</h1>
+                </div>
             </div>
 
+            <h1 class="brand-font text-3xl md:text-4xl text-slate-800 font-bold tracking-tight">
+                Performance Evaluation Portal
+            </h1>
+            <p class="text-slate-500 mt-2 text-sm md:text-base max-w-2xl mx-auto">
+                Official Human Resources Department System. Please select your evaluation type below to begin.
+            </p>
         </div>
-    </div>
+    </header>
 
-    <div class="flex-grow flex items-center justify-center p-6 z-20">
+    <!-- MAIN SELECTION AREA -->
+    <main class="flex-grow flex items-center justify-center p-6 z-0">
         <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            <!-- ANNUAL CARD -->
-            <button onclick="openSystem('annual')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-teal-600 p-8 text-left group">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-teal-50 p-4 rounded-xl text-teal-700 group-hover:bg-teal-600 group-hover:text-white transition shadow-sm">
-                        <i class="fa-solid fa-folder-open text-4xl"></i>
-                    </div>
-                    <span class="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-teal-200">Regular Staff</span>
+            <!-- 1. ANNUAL CARD (BLUE) -->
+            <button onclick="openSystem('annual')" class="portal-card bg-white rounded-xl shadow-md p-8 text-left border-l-blue-600 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fa-solid fa-calendar-check text-9xl text-blue-600"></i>
                 </div>
                 
-                <h2 class="text-2xl font-bold text-gray-800 mb-3 group-hover:text-teal-700 transition">Annual Evaluation</h2>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed">
-                    Yearly performance assessment for regular employees. Use this module for batch processing and annual records.
-                </p>
-                
-                <div class="flex items-center text-teal-700 font-bold text-sm bg-teal-50 w-fit px-4 py-2 rounded-lg group-hover:bg-teal-600 group-hover:text-white transition">
-                    Open File <i class="fa-solid fa-arrow-right ml-2"></i>
+                <div class="relative z-10">
+                    <div class="bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-user-tie text-3xl"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition">Annual / Regular</h2>
+                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">
+                        For regular employees undergoing their annual performance review. Includes self-evaluation, evaluator ratings, and HR verification.
+                    </p>
+
+                    <div class="flex items-center text-blue-700 font-bold text-sm uppercase tracking-wider">
+                        Access Module <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                    </div>
                 </div>
             </button>
 
-            <!-- PROBATIONARY CARD -->
-            <button onclick="openSystem('probation')" class="file-card bg-white rounded-xl shadow-lg border-t-0 border-l-amber-500 p-8 text-left group">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-amber-50 p-4 rounded-xl text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition shadow-sm">
-                        <i class="fa-solid fa-file-contract text-4xl"></i>
-                    </div>
-                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-amber-200">Probationary</span>
+            <!-- 2. PROBATIONARY CARD (YELLOW/GREEN) -->
+            <button onclick="openSystem('probation')" class="portal-card bg-white rounded-xl shadow-md p-8 text-left border-l-amber-500 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fa-solid fa-stopwatch text-9xl text-amber-500"></i>
                 </div>
                 
-                <h2 class="text-2xl font-bold text-gray-800 mb-3 group-hover:text-amber-600 transition">Probationary Evaluation</h2>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed">
-                    Assessment for 3rd and 5th month probationary periods. Select the specific milestone inside.
-                </p>
-                
-                <div class="flex items-center text-amber-600 font-bold text-sm bg-amber-50 w-fit px-4 py-2 rounded-lg group-hover:bg-amber-500 group-hover:text-white transition">
-                    Open File <i class="fa-solid fa-arrow-right ml-2"></i>
+                <div class="relative z-10">
+                    <div class="bg-amber-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6 text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-clipboard-list text-3xl"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-amber-600 transition">Probationary</h2>
+                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">
+                        For probationary staff at their <strong>3rd</strong> and <strong>5th</strong> month milestones. Select the specific period inside the module.
+                    </p>
+
+                    <div class="flex items-center text-amber-600 font-bold text-sm uppercase tracking-wider">
+                        Access Module <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                    </div>
                 </div>
             </button>
 
         </div>
-    </div>
+    </main>
 
-    <!-- IFRAME OVERLAY -->
-    <div id="app-frame-container">
-        <div class="bg-slate-900 text-white p-3 flex justify-between items-center shadow-md">
-            <div class="flex items-center">
-                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-8 w-auto mr-3 bg-white rounded p-1">
-                <span class="font-bold text-sm tracking-wide">Portal Active</span>
+    <!-- FOOTER -->
+    <footer class="bg-slate-800 text-slate-400 py-10 text-center border-t-4 border-blue-900 mt-auto">
+        <div class="max-w-4xl mx-auto px-4">
+            
+            <!-- FANCY CQI CREDIT -->
+            <div class="inline-block mb-6 px-12 py-5 border border-slate-600 rounded-lg bg-slate-700/30 backdrop-blur-sm">
+                <div class="brand-font text-yellow-500 text-xl tracking-wide font-normal">
+                    System Optimized by <span class="font-bold text-white">CQI</span>
+                </div>
+                <div class="h-px w-full bg-slate-600 my-3"></div>
+                <p class="text-[10px] uppercase tracking-[0.25em] text-slate-300 font-bold">Continuous Quality Improvement</p>
             </div>
-            <button onclick="closeSystem()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded flex items-center transition">
+
+            <p class="text-xs text-slate-500 font-sans">
+                &copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- APP OVERLAY (The "Browser inside a Browser") -->
+    <!-- ================================================================= -->
+    <div id="app-overlay">
+        <!-- Overlay Header -->
+        <div class="bg-slate-900 text-white h-12 flex justify-between items-center px-4 shadow-md shrink-0">
+            <div class="flex items-center gap-3">
+                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-6 bg-white rounded px-1">
+                <span class="text-xs font-bold tracking-wide text-slate-300 uppercase hidden md:inline">Secure Session Active</span>
+            </div>
+            
+            <button onclick="closeSystem()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-1.5 rounded transition flex items-center">
                 <i class="fa-solid fa-xmark mr-2"></i> EXIT / CLOSE
             </button>
         </div>
 
-        <div id="frame-loader" class="absolute inset-0 top-12 flex flex-col items-center justify-center bg-gray-50 z-40">
-            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-            <p class="text-gray-500 text-sm font-bold animate-pulse">Establishing Secure Connection...</p>
-        </div>
-
-        <iframe id="app-frame" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads"></iframe>
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-800 text-slate-400 py-10 text-center mt-auto border-t-8 border-yellow-500">
-        <div class="max-w-4xl mx-auto px-4">
+        <!-- Iframe Container -->
+        <div class="flex-grow relative bg-gray-100">
             
-            <div class="inline-block mb-6 px-10 py-4 border border-slate-600 rounded-lg bg-slate-700/30">
-                <div class="cqi-font text-yellow-500 text-xl tracking-wide font-normal">
-                    System Optimized by <span class="font-bold text-white">CQI</span>
-                </div>
-                <div class="h-px w-full bg-slate-600 my-3"></div>
-                <p class="cqi-font text-xs uppercase tracking-[0.2em] text-slate-300 font-bold">Continuous Quality Improvement</p>
+            <!-- Loading Indicator -->
+            <div id="frame-loader" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-10">
+                <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full spinner mb-4"></div>
+                <p class="text-slate-600 font-bold text-sm animate-pulse">Establishing Secure Connection...</p>
+                <p class="text-slate-400 text-xs mt-2">Please wait while the module loads.</p>
             </div>
 
-            <p class="text-xs text-slate-500 font-sans">&copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.</p>
+            <!-- The App -->
+            <iframe id="app-frame" class="w-full h-full border-none" 
+                    sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads allow-modals">
+            </iframe>
         </div>
-    </footer>
+    </div>
+
+    <!-- LOGIC -->
+    <script>
+        function openSystem(type) {
+            const overlay = document.getElementById('app-overlay');
+            const frame = document.getElementById('app-frame');
+            const loader = document.getElementById('frame-loader');
+            let url = "";
+
+            // 1. Determine URL
+            if (type === 'annual') url = API_ANNUAL;
+            if (type === 'probation') url = API_PROBATION;
+
+            // 2. Validation
+            if (!url || url.includes("PASTE_YOUR")) {
+                alert("⚠️ SYSTEM CONFIGURATION ERROR ⚠️\n\nThe Web App URL has not been set for this module.\n\nPlease contact IT/Admin to paste the correct Google Script Deployment URL in the index.html file.");
+                return;
+            }
+
+            // 3. Launch
+            overlay.style.display = 'flex';
+            loader.style.display = 'flex'; // Show loader reset
+            frame.src = url;
+
+            // 4. Handle Load
+            frame.onload = function() {
+                // Small delay to ensure render
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 1500);
+            };
+        }
+
+        function closeSystem() {
+            // 1. Hide Overlay
+            document.getElementById('app-overlay').style.display = 'none';
+            // 2. Clear Iframe (Stops memory leaks/scripts)
+            document.getElementById('app-frame').src = 'about:blank';
+            // 3. Refresh Parent (Optional, keeps state clean)
+            // location.reload(); 
+        }
+    </script>
 
 </body>
 </html>
