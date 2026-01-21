@@ -4,203 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TDMH Performance Evaluation Portal</title>
-    
-    <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        /* CUSTOM STYLES */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #f1f5f9; 
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 24px 24px;
-        }
-        
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 24px 24px; }
         .brand-font { font-family: 'Playfair Display', serif; }
-
-        /* CARD HOVER EFFECTS */
-        .portal-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left-width: 8px;
-        }
-        .portal-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* IFRAME FULLSCREEN OVERLAY */
-        #app-overlay {
-            display: none; /* Hidden by default */
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            background: white;
-            flex-direction: column;
-        }
-        
-        /* SPINNER ANIMATION */
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .portal-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-left-width: 8px; }
+        .portal-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        #app-overlay { display: none; position: fixed; inset: 0; z-index: 50; background: white; flex-direction: column; }
         .spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- ========================================================================= -->
-    <!--                       CONFIGURATION ZONE                                  -->
-    <!--           ACTIVE GOOGLE SCRIPT WEB APP URLS                               -->
-    <!-- ========================================================================= -->
     <script>
+        // PASTE YOUR DEPLOYED WEB APP URLS HERE
         const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
-    <!-- ========================================================================= -->
 
-
-    <!-- HERO HEADER -->
     <header class="bg-white shadow-xl border-b-4 border-yellow-500 relative z-10">
         <div class="max-w-5xl mx-auto px-4 py-8 text-center">
-            
-            <!-- LOGO AREA -->
             <div class="mb-4">
                 <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
-                     alt="TDMH Logo" 
-                     class="h-24 md:h-32 w-auto mx-auto object-contain hover:opacity-90 transition"
+                     alt="TDMH Logo" class="h-24 md:h-32 w-auto mx-auto object-contain hover:opacity-90 transition"
                      onerror="this.style.display='none'; document.getElementById('text-logo').classList.remove('hidden');">
-                
-                <!-- Fallback Text Logo if Image Fails -->
-                <div id="text-logo" class="hidden text-blue-900">
-                    <i class="fa-solid fa-hospital text-5xl mb-2"></i>
-                    <h1 class="text-2xl font-bold">Taytay Doctors</h1>
-                </div>
+                <div id="text-logo" class="hidden text-blue-900"><i class="fa-solid fa-hospital text-5xl mb-2"></i><h1 class="text-2xl font-bold">Taytay Doctors</h1></div>
             </div>
-
-            <h1 class="brand-font text-3xl md:text-4xl text-slate-800 font-bold tracking-tight">
-                Performance Evaluation Portal
-            </h1>
-            <p class="text-slate-500 mt-2 text-sm md:text-base max-w-2xl mx-auto">
-                Official Human Resources Department System. Please select your evaluation type below to begin.
-            </p>
+            <h1 class="brand-font text-3xl md:text-4xl text-slate-800 font-bold tracking-tight">Performance Evaluation Portal</h1>
+            <p class="text-slate-500 mt-2 text-sm md:text-base max-w-2xl mx-auto">Official Human Resources Department System.</p>
         </div>
     </header>
 
-    <!-- MAIN SELECTION AREA -->
     <main class="flex-grow flex items-center justify-center p-6 z-0">
-        <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            <!-- 1. ANNUAL CARD (BLUE) -->
-            <button onclick="openSystem('annual')" class="portal-card bg-white rounded-xl shadow-md p-8 text-left border-l-blue-600 group relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
-                    <i class="fa-solid fa-calendar-check text-9xl text-blue-600"></i>
-                </div>
-                
+        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- 1. ANNUAL CARD -->
+            <button onclick="openSystem('annual')" class="portal-card bg-white rounded-xl shadow-md p-6 text-left border-l-blue-600 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition"><i class="fa-solid fa-calendar-check text-8xl text-blue-600"></i></div>
                 <div class="relative z-10">
-                    <div class="bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                        <i class="fa-solid fa-user-tie text-3xl"></i>
-                    </div>
-                    
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition">Annual / Regular</h2>
-                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">
-                        For regular employees undergoing their annual performance review. Includes self-evaluation, evaluator ratings, and HR verification.
-                    </p>
-
-                    <div class="flex items-center text-blue-700 font-bold text-sm uppercase tracking-wider">
-                        Access Module <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
-                    </div>
+                    <div class="bg-blue-50 w-14 h-14 rounded-xl flex items-center justify-center mb-4 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300"><i class="fa-solid fa-user-tie text-2xl"></i></div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition">Annual / Regular</h2>
+                    <p class="text-slate-500 text-xs mb-4 leading-relaxed">For regular employees undergoing annual review.</p>
+                    <div class="flex items-center text-blue-700 font-bold text-xs uppercase tracking-wider">Start Evaluation <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i></div>
                 </div>
             </button>
 
-            <!-- 2. PROBATIONARY CARD (YELLOW/GREEN) -->
-            <button onclick="openSystem('probation')" class="portal-card bg-white rounded-xl shadow-md p-8 text-left border-l-amber-500 group relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
-                    <i class="fa-solid fa-stopwatch text-9xl text-amber-500"></i>
-                </div>
-                
+            <!-- 2. PROBATIONARY CARD -->
+            <button onclick="openSystem('probation')" class="portal-card bg-white rounded-xl shadow-md p-6 text-left border-l-amber-500 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition"><i class="fa-solid fa-stopwatch text-8xl text-amber-500"></i></div>
                 <div class="relative z-10">
-                    <div class="bg-amber-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6 text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
-                        <i class="fa-solid fa-clipboard-list text-3xl"></i>
-                    </div>
-                    
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-amber-600 transition">Probationary</h2>
-                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">
-                        For probationary staff at their <strong>3rd</strong> and <strong>5th</strong> month milestones. Select the specific period inside the module.
-                    </p>
+                    <div class="bg-amber-50 w-14 h-14 rounded-xl flex items-center justify-center mb-4 text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300"><i class="fa-solid fa-clipboard-list text-2xl"></i></div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-amber-600 transition">Probationary</h2>
+                    <p class="text-slate-500 text-xs mb-4 leading-relaxed">For probationary staff (3rd & 5th month).</p>
+                    <div class="flex items-center text-amber-600 font-bold text-xs uppercase tracking-wider">Start Evaluation <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i></div>
+                </div>
+            </button>
 
-                    <div class="flex items-center text-amber-600 font-bold text-sm uppercase tracking-wider">
-                        Access Module <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
-                    </div>
+            <!-- 3. EMPLOYEE ACKNOWLEDGEMENT -->
+            <button onclick="showEmployeeModal()" class="portal-card bg-white rounded-xl shadow-md p-6 text-left border-l-green-600 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition"><i class="fa-solid fa-signature text-8xl text-green-600"></i></div>
+                <div class="relative z-10">
+                    <div class="bg-green-50 w-14 h-14 rounded-xl flex items-center justify-center mb-4 text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300"><i class="fa-solid fa-pen-nib text-2xl"></i></div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-green-700 transition">Employee Acknowledgement</h2>
+                    <p class="text-slate-500 text-xs mb-4 leading-relaxed">View your evaluation results and sign your acknowledgement.</p>
+                    <div class="flex items-center text-green-700 font-bold text-xs uppercase tracking-wider">Access My Record <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i></div>
                 </div>
             </button>
 
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-slate-800 text-slate-400 py-10 text-center border-t-4 border-blue-900 mt-auto">
-        <div class="max-w-4xl mx-auto px-4">
-            
-            <!-- FANCY CQI CREDIT -->
-            <div class="inline-block mb-6 px-12 py-5 border border-slate-600 rounded-lg bg-slate-700/30 backdrop-blur-sm">
-                <div class="brand-font text-yellow-500 text-xl tracking-wide font-normal">
-                    System Optimized by <span class="font-bold text-white">CQI</span>
-                </div>
-                <div class="h-px w-full bg-slate-600 my-3"></div>
-                <p class="text-[10px] uppercase tracking-[0.25em] text-slate-300 font-bold">Continuous Quality Improvement</p>
+    <!-- EMPLOYEE ID MODAL -->
+    <div id="emp-modal" class="fixed inset-0 bg-black/60 z-40 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 relative">
+            <button onclick="document.getElementById('emp-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 text-green-600 text-xl"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Find Your Evaluation</h3>
+                <p class="text-xs text-gray-500 mb-4">Enter the Evaluation Reference ID sent to your email (e.g., ANN-1729...)</p>
+                <input type="text" id="emp-id-input" placeholder="Enter ID here" class="w-full border p-3 rounded-lg text-center mb-4 font-mono text-sm focus:ring-2 focus:ring-green-500 outline-none uppercase">
+                <button onclick="processEmployeeLogin()" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-lg hover:bg-green-700 transition">SEARCH & OPEN</button>
             </div>
-
-            <p class="text-xs text-slate-500 font-sans">
-                &copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.
-            </p>
-        </div>
-    </footer>
-
-    <!-- ================================================================= -->
-    <!-- APP OVERLAY (The "Browser inside a Browser") -->
-    <!-- ================================================================= -->
-    <div id="app-overlay">
-        <!-- Overlay Header -->
-        <div class="bg-slate-900 text-white h-12 flex justify-between items-center px-4 shadow-md shrink-0">
-            <div class="flex items-center gap-3">
-                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-6 bg-white rounded px-1">
-                <span class="text-xs font-bold tracking-wide text-slate-300 uppercase hidden md:inline">Secure Session Active</span>
-            </div>
-            
-            <button onclick="closeSystem()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-1.5 rounded transition flex items-center">
-                <i class="fa-solid fa-xmark mr-2"></i> EXIT / CLOSE
-            </button>
-        </div>
-
-        <!-- Iframe Container -->
-        <div class="flex-grow relative bg-gray-100">
-            
-            <!-- Loading Indicator -->
-            <div id="frame-loader" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-10">
-                <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full spinner mb-4"></div>
-                <p class="text-slate-600 font-bold text-sm animate-pulse">Establishing Secure Connection...</p>
-                <p class="text-slate-400 text-xs mt-2">Please wait while the module loads.</p>
-            </div>
-
-            <!-- The App -->
-            <iframe id="app-frame" class="w-full h-full border-none" 
-                    sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads allow-modals">
-            </iframe>
         </div>
     </div>
 
-    <!-- LOGIC -->
+    <footer class="bg-slate-800 text-slate-400 py-10 text-center border-t-4 border-blue-900 mt-auto">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="inline-block mb-6 px-12 py-5 border border-slate-600 rounded-lg bg-slate-700/30 backdrop-blur-sm">
+                <div class="brand-font text-yellow-500 text-xl tracking-wide font-normal">System Optimized by <span class="font-bold text-white">CQI</span></div>
+                <div class="h-px w-full bg-slate-600 my-3"></div>
+                <p class="text-[10px] uppercase tracking-[0.25em] text-slate-300 font-bold">Continuous Quality Improvement</p>
+            </div>
+            <p class="text-xs text-slate-500 font-sans">&copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- APP OVERLAY -->
+    <div id="app-overlay">
+        <div class="bg-slate-900 text-white h-12 flex justify-between items-center px-4 shadow-md shrink-0">
+            <div class="flex items-center gap-3"><img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-6 bg-white rounded px-1"><span class="text-xs font-bold tracking-wide text-slate-300 uppercase hidden md:inline">Secure Session Active</span></div>
+            <button onclick="closeSystem()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-1.5 rounded transition flex items-center"><i class="fa-solid fa-xmark mr-2"></i> EXIT / CLOSE</button>
+        </div>
+        <div class="flex-grow relative bg-gray-100">
+            <div id="frame-loader" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-10">
+                <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full spinner mb-4"></div>
+                <p class="text-slate-600 font-bold text-sm animate-pulse">Establishing Secure Connection...</p>
+            </div>
+            <iframe id="app-frame" class="w-full h-full border-none" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads allow-modals"></iframe>
+        </div>
+    </div>
+
     <script>
-        // IMMEDIATE REDIRECT LOGIC
-        // This function checks if the user arrived via a Direct Link (from email)
+        // SMART ROUTER
         window.onload = function() {
             const p = new URLSearchParams(window.location.search);
-            const sys = p.get('sys'); // "annual" or "probation"
+            const sys = p.get('sys');
             if(sys) {
-                // If 'sys' parameter exists, pass ALL URL parameters to the iframe
                 openSystem(sys, window.location.search);
             }
         };
+
+        function showEmployeeModal() {
+            document.getElementById('emp-modal').classList.remove('hidden');
+        }
+
+        function processEmployeeLogin() {
+            const id = document.getElementById('emp-id-input').value.trim().toUpperCase();
+            if (!id) return alert("Please enter an ID.");
+
+            let sys = "";
+            if (id.startsWith("ANN")) sys = "annual";
+            else if (id.startsWith("PROB")) sys = "probation";
+            else return alert("Invalid ID Format. Must start with ANN or PROB.");
+
+            document.getElementById('emp-modal').classList.add('hidden');
+            openSystem(sys, `?view=employee&id=${id}`);
+        }
 
         function openSystem(type, queryParams = "") {
             const overlay = document.getElementById('app-overlay');
@@ -211,42 +153,26 @@
             if (type === 'annual') url = API_ANNUAL;
             if (type === 'probation') url = API_PROBATION;
 
-            if (!url || url.includes("PASTE_YOUR")) {
-                alert("⚠️ SYSTEM CONFIGURATION ERROR ⚠️\n\nThe Web App URL has not been set for this module.\n\nPlease contact IT/Admin to paste the correct Google Script Deployment URL in the index.html file.");
-                return;
-            }
+            if (!url || url.includes("PASTE_YOUR")) { alert("Config Error: URLs not set."); return; }
 
-            // Append query parameters correctly
             if(queryParams) {
-                // Determine connector (? or &) based on if the URL already has params
                 const conn = url.includes('?') ? '&' : '?';
-                // Remove the leading '?' from queryParams if it exists to avoid double ??
                 const q = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
                 url = url + conn + q;
             }
 
-            // Launch Overlay
             overlay.style.display = 'flex';
             loader.style.display = 'flex';
             frame.src = url;
 
-            // Handle Load Event
-            frame.onload = function() {
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 1500);
-            };
+            frame.onload = function() { setTimeout(() => { loader.style.display = 'none'; }, 2000); };
         }
 
         function closeSystem() {
-            // Hide Overlay
             document.getElementById('app-overlay').style.display = 'none';
-            // Clear Iframe (Stops memory leaks/scripts)
             document.getElementById('app-frame').src = 'about:blank';
-            // Clear URL params without refresh to reset state to Homepage
             window.history.pushState({}, document.title, window.location.pathname);
         }
     </script>
-
 </body>
 </html>
