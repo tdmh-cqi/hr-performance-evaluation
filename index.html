@@ -191,43 +191,61 @@
 
     <!-- LOGIC -->
     <script>
-        function openSystem(type) {
+        // CRITICAL: Check URL params on load to support Direct Links
+        window.onload = function() {
+            const p = new URLSearchParams(window.location.search);
+            const view = p.get('view');
+            
+            if(view) {
+                // If view exists, we must know which system to open.
+                // We default to 'annual' if not specified, OR we need a way to know.
+                // Solution: Direct links should be to the *Google Script URL*, but you want them to come *here*.
+                // To do that, the email link must be: github.io/.../?sys=annual&view=admin
+                
+                const sys = p.get('sys');
+                if(sys) {
+                    openSystem(sys, window.location.search); // Pass query params
+                }
+            }
+        };
+
+        function openSystem(type, queryParams = "") {
             const overlay = document.getElementById('app-overlay');
             const frame = document.getElementById('app-frame');
             const loader = document.getElementById('frame-loader');
             let url = "";
 
-            // 1. Determine URL
             if (type === 'annual') url = API_ANNUAL;
             if (type === 'probation') url = API_PROBATION;
 
-            // 2. Validation
             if (!url || url.includes("PASTE_YOUR")) {
-                alert("⚠️ SYSTEM CONFIGURATION ERROR ⚠️\n\nThe Web App URL has not been set for this module.\n\nPlease contact IT/Admin to paste the correct Google Script Deployment URL in the index.html file.");
+                alert("Config Error: URLs not set.");
                 return;
             }
 
-            // 3. Launch
+            // Append params if any (e.g., ?view=admin)
+            if(queryParams) {
+                // Determine connector (? or &)
+                const conn = url.includes('?') ? '&' : '?';
+                // Remove the '?' from queryParams if it exists to avoid double ??
+                const q = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
+                url = url + conn + q;
+            }
+
             overlay.style.display = 'flex';
-            loader.style.display = 'flex'; // Show loader reset
+            loader.style.display = 'flex';
             frame.src = url;
 
-            // 4. Handle Load
             frame.onload = function() {
-                // Small delay to ensure render
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 1500);
+                setTimeout(() => { loader.style.display = 'none'; }, 1500);
             };
         }
 
         function closeSystem() {
-            // 1. Hide Overlay
             document.getElementById('app-overlay').style.display = 'none';
-            // 2. Clear Iframe (Stops memory leaks/scripts)
             document.getElementById('app-frame').src = 'about:blank';
-            // 3. Refresh Parent (Optional, keeps state clean)
-            // location.reload(); 
+            // Clear URL params without refresh to reset state
+            window.history.pushState({}, document.title, window.location.pathname);
         }
     </script>
 
