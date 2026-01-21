@@ -8,6 +8,7 @@
     <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fancy Font for CQI -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -191,21 +192,13 @@
 
     <!-- LOGIC -->
     <script>
-        // CRITICAL: Check URL params on load to support Direct Links
+        // ROUTER: Detect ?sys=...&view=... parameters immediately on load
         window.onload = function() {
             const p = new URLSearchParams(window.location.search);
-            const view = p.get('view');
-            
-            if(view) {
-                // If view exists, we must know which system to open.
-                // We default to 'annual' if not specified, OR we need a way to know.
-                // Solution: Direct links should be to the *Google Script URL*, but you want them to come *here*.
-                // To do that, the email link must be: github.io/.../?sys=annual&view=admin
-                
-                const sys = p.get('sys');
-                if(sys) {
-                    openSystem(sys, window.location.search); // Pass query params
-                }
+            const sys = p.get('sys');
+            if(sys) {
+                // Pass the full query string (e.g. ?sys=annual&view=admin) to openSystem
+                openSystem(sys, window.location.search);
             }
         };
 
@@ -219,7 +212,7 @@
             if (type === 'probation') url = API_PROBATION;
 
             if (!url || url.includes("PASTE_YOUR")) {
-                alert("Config Error: URLs not set.");
+                alert("⚠️ SYSTEM CONFIGURATION ERROR ⚠️\n\nThe Web App URL has not been set for this module.\n\nPlease contact IT/Admin.");
                 return;
             }
 
@@ -232,19 +225,25 @@
                 url = url + conn + q;
             }
 
+            // Launch Overlay
             overlay.style.display = 'flex';
             loader.style.display = 'flex';
             frame.src = url;
 
+            // Handle Load Event
             frame.onload = function() {
-                setTimeout(() => { loader.style.display = 'none'; }, 1500);
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 1500);
             };
         }
 
         function closeSystem() {
+            // Hide Overlay
             document.getElementById('app-overlay').style.display = 'none';
+            // Clear Iframe (Stops memory leaks/scripts)
             document.getElementById('app-frame').src = 'about:blank';
-            // Clear URL params without refresh to reset state
+            // Clear URL params without refresh to reset state to Homepage
             window.history.pushState({}, document.title, window.location.pathname);
         }
     </script>
