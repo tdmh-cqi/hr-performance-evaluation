@@ -20,7 +20,7 @@
 <body class="min-h-screen flex flex-col">
 
     <script>
-        // PASTE YOUR DEPLOYED WEB APP URLS HERE
+        // *** CONFIGURATION: PASTE YOUR DEPLOYED WEB APP URLS HERE ***
         const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
@@ -118,7 +118,7 @@
     </div>
 
     <script>
-        // SMART ROUTER
+        // ROUTER: Detect ?sys=...&view=... parameters immediately on load
         window.onload = function() {
             const p = new URLSearchParams(window.location.search);
             const sys = p.get('sys');
