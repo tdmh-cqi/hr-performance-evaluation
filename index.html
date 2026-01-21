@@ -8,7 +8,6 @@
     <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Fancy Font for CQI -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -192,12 +191,13 @@
 
     <!-- LOGIC -->
     <script>
-        // ROUTER: Detect ?sys=...&view=... parameters immediately on load
+        // IMMEDIATE REDIRECT LOGIC
+        // This function checks if the user arrived via a Direct Link (from email)
         window.onload = function() {
             const p = new URLSearchParams(window.location.search);
-            const sys = p.get('sys');
+            const sys = p.get('sys'); // "annual" or "probation"
             if(sys) {
-                // Pass the full query string (e.g. ?sys=annual&view=admin) to openSystem
+                // If 'sys' parameter exists, pass ALL URL parameters to the iframe
                 openSystem(sys, window.location.search);
             }
         };
@@ -212,15 +212,15 @@
             if (type === 'probation') url = API_PROBATION;
 
             if (!url || url.includes("PASTE_YOUR")) {
-                alert("⚠️ SYSTEM CONFIGURATION ERROR ⚠️\n\nThe Web App URL has not been set for this module.\n\nPlease contact IT/Admin.");
+                alert("⚠️ SYSTEM CONFIGURATION ERROR ⚠️\n\nThe Web App URL has not been set for this module.\n\nPlease contact IT/Admin to paste the correct Google Script Deployment URL in the index.html file.");
                 return;
             }
 
-            // Append params if any (e.g., ?view=admin)
+            // Append query parameters correctly
             if(queryParams) {
-                // Determine connector (? or &)
+                // Determine connector (? or &) based on if the URL already has params
                 const conn = url.includes('?') ? '&' : '?';
-                // Remove the '?' from queryParams if it exists to avoid double ??
+                // Remove the leading '?' from queryParams if it exists to avoid double ??
                 const q = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
                 url = url + conn + q;
             }
