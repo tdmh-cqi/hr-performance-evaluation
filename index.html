@@ -20,7 +20,7 @@
 <body class="min-h-screen flex flex-col">
 
     <script>
-        // *** CONFIGURATION: TDMH WEB APP URLS ***
+        // *** CONFIGURATION: PASTE YOUR DEPLOYED WEB APP URLS HERE ***
         const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
@@ -118,16 +118,20 @@
     </div>
 
     <script>
-        // ROUTER: Detect ?id= parameter immediately on load for Employees
+        // ROUTER: Detect ?sys=...&view=... OR ?id=... parameters immediately on load
         window.onload = function() {
             const p = new URLSearchParams(window.location.search);
+            const sys = p.get('sys');
             const id = p.get('id');
-            if(id) {
-                // If ID exists, auto-open the modal and simulate logic
+
+            if (id) {
+                // If ID exists, automatically trigger employee flow
                 showEmployeeModal();
                 document.getElementById('emp-id-input').value = id;
-                // Auto-submit after a slight delay to allow UI to settle
-                setTimeout(() => processEmployeeLogin(), 500);
+                processEmployeeLogin();
+            } else if (sys) {
+                // If just system type, open generic
+                openSystem(sys, window.location.search);
             }
         };
 
@@ -140,13 +144,11 @@
             if (!id) return alert("Please enter an ID.");
 
             let sys = "";
-            // Route based on ID prefix
             if (id.startsWith("ANN")) sys = "annual";
             else if (id.startsWith("PROB")) sys = "probation";
             else return alert("Invalid ID Format. Must start with ANN or PROB.");
 
             document.getElementById('emp-modal').classList.add('hidden');
-            // Pass view=employee and id to the Web App
             openSystem(sys, `?view=employee&id=${id}`);
         }
 
@@ -159,9 +161,8 @@
             if (type === 'annual') url = API_ANNUAL;
             if (type === 'probation') url = API_PROBATION;
 
-            if (!url) { alert("System URL not configured."); return; }
+            if (!url || url.includes("PASTE_YOUR")) { alert("Config Error: URLs not set."); return; }
 
-            // Append query params if they exist (e.g., from processEmployeeLogin)
             if(queryParams) {
                 const conn = url.includes('?') ? '&' : '?';
                 const q = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
@@ -178,7 +179,7 @@
         function closeSystem() {
             document.getElementById('app-overlay').style.display = 'none';
             document.getElementById('app-frame').src = 'about:blank';
-            // Clean URL
+            // Clear URL params
             window.history.pushState({}, document.title, window.location.pathname);
         }
     </script>
