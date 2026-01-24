@@ -20,11 +20,15 @@
 <body class="min-h-screen flex flex-col">
 
     <script>
+        // =========================================================================
         // *** CONFIGURATION: PASTE YOUR DEPLOYED WEB APP URLS HERE ***
+        // =========================================================================
         const API_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const API_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
+        // =========================================================================
     </script>
 
+    <!-- HEADER -->
     <header class="bg-white shadow-xl border-b-4 border-yellow-500 relative z-10">
         <div class="max-w-5xl mx-auto px-4 py-8 text-center">
             <div class="mb-4">
@@ -38,6 +42,7 @@
         </div>
     </header>
 
+    <!-- MAIN DASHBOARD -->
     <main class="flex-grow flex items-center justify-center p-6 z-0">
         <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-6">
             
@@ -91,6 +96,7 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="bg-slate-800 text-slate-400 py-10 text-center border-t-4 border-blue-900 mt-auto">
         <div class="max-w-4xl mx-auto px-4">
             <div class="inline-block mb-6 px-12 py-5 border border-slate-600 rounded-lg bg-slate-700/30 backdrop-blur-sm">
@@ -125,13 +131,15 @@
             const id = p.get('id');
 
             if (id) {
-                // If ID exists, automatically trigger employee flow
+                // If ID exists in URL (from email link), automatically trigger employee flow
                 showEmployeeModal();
                 document.getElementById('emp-id-input').value = id;
-                processEmployeeLogin();
+                // Auto-submit after a brief delay to ensure DOM is ready
+                setTimeout(processEmployeeLogin, 500);
             } else if (sys) {
-                // If just system type, open generic
-                openSystem(sys, window.location.search);
+                // If just system type (e.g. from HR email), open generic
+                const view = p.get('view') ? `&view=${p.get('view')}` : '';
+                openSystem(sys, view);
             }
         };
 
@@ -149,7 +157,8 @@
             else return alert("Invalid ID Format. Must start with ANN or PROB.");
 
             document.getElementById('emp-modal').classList.add('hidden');
-            openSystem(sys, `?view=employee&id=${id}`);
+            // Route to specific Employee View with ID
+            openSystem(sys, `&view=employee&id=${id}`);
         }
 
         function openSystem(type, queryParams = "") {
@@ -161,12 +170,15 @@
             if (type === 'annual') url = API_ANNUAL;
             if (type === 'probation') url = API_PROBATION;
 
-            if (!url || url.includes("PASTE_YOUR")) { alert("Config Error: URLs not set."); return; }
+            if (!url || url.includes("PASTE_YOUR")) { alert("Config Error: URLs not set. Please update the code with your Web App URLs."); return; }
 
+            // Construct Final URL
             if(queryParams) {
-                const conn = url.includes('?') ? '&' : '?';
-                const q = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
-                url = url + conn + q;
+                // Ensure queryParams starts correctly
+                const prefix = url.includes('?') ? '&' : '?';
+                // Remove leading ? or & from queryParams if present to avoid duplication, then add prefix
+                const cleanParams = queryParams.replace(/^[?&]/, '');
+                url = url + prefix + cleanParams;
             }
 
             overlay.style.display = 'flex';
@@ -179,7 +191,7 @@
         function closeSystem() {
             document.getElementById('app-overlay').style.display = 'none';
             document.getElementById('app-frame').src = 'about:blank';
-            // Clear URL params
+            // Clear URL params to clean state
             window.history.pushState({}, document.title, window.location.pathname);
         }
     </script>
