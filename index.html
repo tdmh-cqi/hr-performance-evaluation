@@ -4,261 +4,358 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TDMH Performance Evaluation Portal</title>
-    <!-- Tailwind CSS for modern styling -->
+    
+    <!-- Frameworks and Professional Typography -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for medical and system icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Playfair Display for headers, Inter for UI -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* Base System Styling */
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #f8fafc; 
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px); 
-            background-size: 32px 32px; 
+            color: #0f172a;
+            overflow-x: hidden;
         }
-        .brand-font { font-family: 'Playfair Display', serif; }
+
+        .brand-font { 
+            font-family: 'Playfair Display', serif; 
+        }
         
+        /* Modern Card Transitions and Depth */
         .portal-card { 
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            border-bottom: 6px solid transparent;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            border-bottom: 8px solid transparent;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
+
         .portal-card:hover { 
-            transform: translateY(-12px); 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-12px) scale(1.02); 
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15);
         }
-        
+
+        /* Full Screen Overlay for Apps */
         #app-overlay { 
             display: none; 
             position: fixed; 
             inset: 0; 
-            z-index: 100; 
+            z-index: 999; 
             background: white; 
             flex-direction: column; 
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
         
+        /* Animated Loading Indicators */
         .loading-ring {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #1e3a8a;
+            border: 5px solid #f1f5f9;
+            border-top: 5px solid #1e3a8a;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+
+        /* Custom Scrollbar for better UI */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
     <script>
         /**
-         * CONFIGURATION: INTEGRATED WEB APP URLS
+         * SYSTEM CONFIGURATION: Deployed Google Web App URLs
+         * Hardcoded as per hospital requirements.
          */
         const URL_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const URL_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
 
-    <!-- HEADER SECTION -->
-    <header class="bg-white shadow-lg border-b-4 border-yellow-500 relative z-10">
-        <div class="max-w-6xl mx-auto px-6 py-10 text-center">
-            <div class="mb-6">
-                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
-                     alt="TDMH Logo" class="h-28 md:h-36 w-auto mx-auto object-contain drop-shadow-md"
-                     onerror="this.style.display='none'; document.getElementById('text-logo').classList.remove('hidden');">
-                <div id="text-logo" class="hidden text-blue-900">
-                    <i class="fa-solid fa-hospital-user text-6xl mb-2"></i>
-                    <h1 class="text-3xl font-black uppercase tracking-tighter">Taytay Doctors</h1>
-                </div>
-            </div>
-            <h1 class="brand-font text-4xl md:text-5xl text-slate-900 font-bold tracking-tight">Performance Evaluation Portal</h1>
-            <div class="mt-4 flex justify-center items-center gap-3">
-                <span class="h-px w-12 bg-slate-300"></span>
-                <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.3em]">Quality Management System</p>
-                <span class="h-px w-12 bg-slate-300"></span>
+    <!-- PORTAL HEADER -->
+    <header class="bg-white shadow-xl border-b-4 border-[#fbbf24] py-12 px-6 text-center relative overflow-hidden">
+        <!-- Background decoration -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+            <i class="fa-solid fa-hospital text-[25rem] -ml-20 -mt-20"></i>
+        </div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
+                 alt="TDMH Logo" 
+                 class="h-32 mx-auto mb-8 drop-shadow-lg transition-transform hover:scale-105 duration-500">
+            
+            <h1 class="brand-font text-4xl md:text-6xl font-black text-slate-900 tracking-tighter leading-tight uppercase">
+                Performance Evaluation Portal
+            </h1>
+            
+            <div class="mt-6 flex justify-center items-center gap-4">
+                <span class="h-1 w-16 bg-[#1e3a8a] rounded-full"></span>
+                <p class="text-[#1e3a8a] font-black uppercase tracking-[0.4em] text-xs md:text-sm italic">
+                    Taytay Doctors Multispecialty Hospital
+                </p>
+                <span class="h-1 w-16 bg-[#1e3a8a] rounded-full"></span>
             </div>
         </div>
     </header>
 
-    <!-- MAIN DASHBOARD -->
-    <main class="flex-grow flex items-center justify-center p-8">
-        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="flex-grow flex items-center justify-center p-6 md:p-12 lg:p-20">
+        <div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-3 gap-10">
             
-            <!-- ANNUAL/REGULAR CARD -->
-            <button onclick="launchSystem('annual')" class="portal-card bg-white rounded-3xl shadow-xl p-8 text-left group border-b-blue-700">
-                <div class="w-16 h-16 bg-blue-50 text-blue-700 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-700 group-hover:text-white transition-all duration-300">
-                    <i class="fa-solid fa-calendar-check text-3xl"></i>
-                </div>
-                <h2 class="text-lg md:text-xl font-black text-slate-800 mb-3 uppercase tracking-tight leading-tight">Annual / Regular</h2>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">Standard performance evaluation for regularized hospital staff and annual assessments.</p>
-                <div class="flex items-center text-blue-700 font-black text-xs uppercase tracking-widest mt-auto">
-                    Open Evaluator Form <i class="fa-solid fa-chevron-right ml-2 group-hover:translate-x-2 transition"></i>
-                </div>
-            </button>
+            <!-- CARD 1: ANNUAL / REGULAR STAFF -->
+            <div class="h-full">
+                <button onclick="launchPortal('annual')" class="portal-card bg-white rounded-[3rem] p-12 text-left border-b-[#1e3a8a] shadow-2xl group w-full">
+                    <div class="w-20 h-20 bg-blue-50 text-[#1e3a8a] rounded-3xl flex items-center justify-center mb-8 group-hover:bg-[#1e3a8a] group-hover:text-white transition-all duration-500 shadow-inner">
+                        <i class="fa-solid fa-calendar-check text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter leading-none">
+                        Annual / Regular
+                    </h2>
+                    <p class="text-slate-400 font-medium text-base mb-10 leading-relaxed">
+                        Official performance review system for regularized employees and annual assessment cycles.
+                    </p>
+                    <div class="mt-auto flex items-center text-[#1e3a8a] font-black text-sm uppercase tracking-widest border-t pt-6 border-slate-50">
+                        <span>Open Evaluation Form</span>
+                        <i class="fa-solid fa-arrow-right-long ml-4 group-hover:translate-x-3 transition-transform duration-300"></i>
+                    </div>
+                </button>
+            </div>
 
-            <!-- PROBATIONARY CARD -->
-            <button onclick="launchSystem('probation')" class="portal-card bg-white rounded-3xl shadow-xl p-8 text-left group border-b-amber-500">
-                <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300">
-                    <i class="fa-solid fa-stopwatch text-3xl"></i>
-                </div>
-                <h2 class="text-lg md:text-xl font-black text-slate-800 mb-3 uppercase tracking-tight leading-tight">Probationary</h2>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">For 3rd and 5th month performance tracking of newly hired hospital personnel.</p>
-                <div class="flex items-center text-amber-600 font-black text-xs uppercase tracking-widest mt-auto">
-                    Start Evaluation <i class="fa-solid fa-chevron-right ml-2 group-hover:translate-x-2 transition"></i>
-                </div>
-            </button>
+            <!-- CARD 2: PROBATIONARY STAFF -->
+            <div class="h-full">
+                <button onclick="launchPortal('probation')" class="portal-card bg-white rounded-[3rem] p-12 text-left border-b-[#facc15] shadow-2xl group w-full">
+                    <div class="w-20 h-20 bg-amber-50 text-[#d97706] rounded-3xl flex items-center justify-center mb-8 group-hover:bg-[#facc15] group-hover:text-slate-900 transition-all duration-500 shadow-inner">
+                        <i class="fa-solid fa-stopwatch text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter leading-none">
+                        Probationary
+                    </h2>
+                    <p class="text-slate-400 font-medium text-base mb-10 leading-relaxed">
+                        Performance monitoring for 3rd month and 5th month probationary assessment phases.
+                    </p>
+                    <div class="mt-auto flex items-center text-[#d97706] font-black text-sm uppercase tracking-widest border-t pt-6 border-slate-50">
+                        <span>Start Assessment</span>
+                        <i class="fa-solid fa-arrow-right-long ml-4 group-hover:translate-x-3 transition-transform duration-300"></i>
+                    </div>
+                </button>
+            </div>
 
-            <!-- EMPLOYEE ACKNOWLEDGEMENT CARD -->
-            <button onclick="showAckModal()" class="portal-card bg-white rounded-3xl shadow-xl p-8 text-left group border-b-green-600">
-                <div class="w-16 h-16 bg-green-50 text-green-700 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-green-700 group-hover:text-white transition-all duration-300">
-                    <i class="fa-solid fa-file-signature text-3xl"></i>
-                </div>
-                <h2 class="text-lg md:text-xl font-black text-slate-800 mb-3 uppercase tracking-tight leading-tight">Employee Acknowledgement</h2>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">Review your verified results and provide your digital signature to complete the cycle.</p>
-                <div class="flex items-center text-green-700 font-black text-xs uppercase tracking-widest mt-auto">
-                    Access My Record <i class="fa-solid fa-chevron-right ml-2 group-hover:translate-x-2 transition"></i>
-                </div>
-            </button>
+            <!-- CARD 3: EMPLOYEE ACKNOWLEDGEMENT (FIXED OVERLAP) -->
+            <div class="h-full">
+                <button onclick="openAcknowledgementModal()" class="portal-card bg-white rounded-[3rem] p-12 text-left border-b-[#22c55e] shadow-2xl group w-full">
+                    <div class="w-20 h-20 bg-green-50 text-[#16a34a] rounded-3xl flex items-center justify-center mb-8 group-hover:bg-[#22c55e] group-hover:text-white transition-all duration-500 shadow-inner">
+                        <i class="fa-solid fa-file-signature text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter leading-tight">
+                        Employee Acknowledgement
+                    </h2>
+                    <p class="text-slate-400 font-medium text-base mb-10 leading-relaxed">
+                        Review your verified evaluation results and provide your digital signature to finalize records.
+                    </p>
+                    <div class="mt-auto flex items-center text-[#16a34a] font-black text-sm uppercase tracking-widest border-t pt-6 border-slate-50">
+                        <span>Access My Record</span>
+                        <i class="fa-solid fa-arrow-right-long ml-4 group-hover:translate-x-3 transition-transform duration-300"></i>
+                    </div>
+                </button>
+            </div>
 
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 text-slate-400 py-12 px-6 text-center border-t-8 border-blue-950">
-        <div class="max-w-4xl mx-auto">
-            <div class="inline-flex flex-col items-center mb-8 px-16 py-6 border border-slate-700 rounded-2xl bg-slate-800/50">
-                <span class="brand-font text-yellow-500 text-2xl tracking-wider font-bold italic">CQI System Optimized</span>
-                <div class="h-px w-24 bg-slate-600 my-3"></div>
-                <p class="text-[10px] uppercase tracking-[0.4em] text-slate-400 font-black">Continuous Quality Improvement</p>
+    <!-- PORTAL FOOTER -->
+    <footer class="bg-slate-900 text-slate-500 py-12 px-6 text-center border-t-[12px] border-[#1e3a8a]">
+        <div class="max-w-4xl mx-auto space-y-6">
+            <div class="inline-block px-12 py-4 border-2 border-slate-700 rounded-2xl bg-slate-800/30 backdrop-blur-sm">
+                <p class="text-yellow-500 font-black tracking-[0.5em] text-[10px] uppercase">Official HR System Optimized by CQI</p>
             </div>
-            <p class="text-[10px] uppercase font-bold tracking-widest text-slate-500">&copy; 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.</p>
+            <p class="text-xs font-bold uppercase tracking-widest opacity-60">
+                © 2025 Taytay Doctors Multispecialty Hospital. All Rights Reserved.
+            </p>
         </div>
     </footer>
 
-    <!-- EMPLOYEE LOGIN MODAL -->
-    <div id="ack-modal" class="fixed inset-0 bg-slate-900/90 z-[110] hidden flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-green-600"></div>
-            <button onclick="closeAckModal()" class="absolute top-6 right-6 text-slate-300 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+    <!-- MODAL: LOCATE EVALUATION RECORD -->
+    <div id="ack-modal" class="fixed inset-0 bg-slate-900/95 z-[1100] hidden flex items-center justify-center p-6 backdrop-blur-xl transition-all duration-500">
+        <div class="bg-white rounded-[4rem] max-w-lg w-full p-16 relative shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border-[10px] border-slate-100">
+            <!-- Close Button -->
+            <button onclick="closeAcknowledgementModal()" class="absolute top-8 right-8 text-slate-300 hover:text-red-500 transition-all duration-300 transform hover:rotate-90">
+                <i class="fa-solid fa-xmark text-4xl"></i>
+            </button>
             
             <div class="text-center">
-                <div class="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner"><i class="fa-solid fa-magnifying-glass"></i></div>
-                <h3 class="text-2xl font-black text-slate-800 mb-2 uppercase tracking-tighter">Locate Evaluation</h3>
-                <p class="text-slate-500 text-sm font-semibold mb-8">Enter the Reference ID provided in your official notification email.</p>
+                <div class="w-24 h-24 bg-green-50 text-green-600 rounded-[2rem] flex items-center justify-center mx-auto mb-10 text-4xl shadow-inner animate-bounce-slow">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <h3 class="text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter">Locate Evaluation</h3>
+                <p class="text-slate-400 text-sm font-bold mb-12 uppercase tracking-widest leading-relaxed">
+                    Enter the Evaluation Reference ID found in your notification email.
+                </p>
                 
-                <input type="text" id="eval-id-input" placeholder="e.g. ANN-123456" 
-                       class="w-full border-4 border-slate-100 p-5 rounded-2xl text-center text-xl font-black mb-6 uppercase focus:border-green-600 outline-none transition-all placeholder:text-slate-200">
+                <input type="text" id="id-input-field" placeholder="ANN-XXXXX / PROB-XXXXX" 
+                       class="w-full border-4 border-slate-50 p-6 rounded-[2rem] text-center text-3xl font-black mb-10 uppercase focus:border-green-600 outline-none transition-all shadow-inner placeholder:text-slate-200">
                 
-                <button onclick="handleEmployeeAuth()" class="w-full bg-green-700 hover:bg-green-600 text-white font-black py-5 rounded-2xl shadow-xl transition transform active:scale-95 uppercase tracking-widest">Open Record</button>
-                <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">Secure Access Point</p>
+                <button onclick="authenticateEmployee()" class="w-full bg-[#16a34a] hover:bg-green-600 text-white font-black py-8 rounded-[2.5rem] shadow-2xl transition-all transform active:scale-95 uppercase tracking-widest text-xl border-b-8 border-green-800">
+                    Open Official Record
+                </button>
+                <p class="mt-6 text-[10px] text-slate-400 font-black uppercase tracking-[0.4em] italic">Secure Point of Access</p>
             </div>
         </div>
     </div>
 
-    <!-- SYSTEM OVERLAY IFRAME -->
+    <!-- OVERLAY: SECURE IFRAME CONTAINER -->
     <div id="app-overlay">
-        <div class="bg-slate-900 text-white h-16 flex justify-between items-center px-8 shadow-xl border-b border-white/10 shrink-0">
-            <div class="flex items-center gap-4">
-                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-8 bg-white rounded-lg px-2 py-1">
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">Secure Encryption Active</span>
-                    <span class="text-xs font-bold text-slate-300 uppercase tracking-tighter" id="overlay-status">Establishing connection...</span>
+        <!-- Control Bar -->
+        <div class="bg-slate-900 text-white h-20 flex justify-between items-center px-10 shrink-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-50 border-b border-white/10">
+            <div class="flex items-center gap-6">
+                <div class="bg-white p-2 rounded-xl">
+                    <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-8">
+                </div>
+                <div class="hidden sm:block">
+                    <span class="text-[10px] font-black tracking-[0.4em] text-blue-400 uppercase leading-none block mb-1">Encrypted Connection</span>
+                    <span class="text-xs font-black text-slate-300 uppercase tracking-tighter" id="system-status-indicator">Establishing Secure Channel...</span>
                 </div>
             </div>
-            <button onclick="exitSystem()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-black px-6 py-2.5 rounded-xl transition shadow-lg flex items-center gap-2">
-                <i class="fa-solid fa-door-open"></i> EXIT PORTAL
+            <button onclick="terminateSession()" class="group bg-red-600 hover:bg-red-700 text-white text-[10px] font-black px-8 py-3 rounded-2xl uppercase tracking-widest transition-all shadow-xl flex items-center gap-3">
+                <i class="fa-solid fa-power-off group-hover:rotate-12 transition"></i>
+                <span>Terminate Session</span>
             </button>
         </div>
+        
+        <!-- Iframe viewport -->
         <div class="flex-grow relative bg-slate-100">
-            <div id="frame-loader" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-20">
-                <div class="loading-ring mb-4"></div>
-                <p class="text-slate-500 font-black text-sm uppercase tracking-widest animate-pulse">Mounting Database...</p>
+            <div id="loader-spinner-container" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-[1000]">
+                <div class="loading-ring mb-6"></div>
+                <p class="text-slate-400 font-black text-sm uppercase tracking-[0.3em] animate-pulse italic">Synchronizing Hospital Database...</p>
             </div>
-            <iframe id="portal-frame" class="w-full h-full border-none" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals"></iframe>
+            <iframe id="main-application-frame" 
+                    class="w-full h-full border-none shadow-2xl" 
+                    sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-top-navigation-by-user-activation">
+            </iframe>
         </div>
     </div>
 
     <script>
         /**
-         * ROUTER: Automatically handle ?id=... on load
+         * PORTAL ROUTING LOGIC
+         * Detects URL parameters and routes to the correct internal module.
          */
         window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
+            const urlParams = new URLSearchParams(window.location.search);
+            const refId = urlParams.get('id');
 
-            if (id) {
-                // Pre-fill and trigger logic
-                showAckModal();
-                document.getElementById('eval-id-input').value = id;
-                handleEmployeeAuth();
+            // SMART ROUTE: If ID exists in URL, auto-fill and login
+            if (refId) {
+                openAcknowledgementModal();
+                document.getElementById('id-input-field').value = refId;
+                // Auto-trigger for seamless email experience
+                authenticateEmployee();
             }
         };
 
-        function showAckModal() {
+        /**
+         * UI CONTROLS
+         */
+        function openAcknowledgementModal() {
             document.getElementById('ack-modal').classList.remove('hidden');
-            document.getElementById('eval-id-input').focus();
+            document.getElementById('id-input-field').focus();
         }
 
-        function closeAckModal() {
+        function closeAcknowledgementModal() {
             document.getElementById('ack-modal').classList.add('hidden');
         }
 
         /**
-         * Logic to determine if ID is Annual (ANN-) or Probationary (PROB-)
+         * AUTHENTICATION LOGIC
+         * Directs user to either Annual or Probationary Apps based on ID Prefix.
          */
-        function handleEmployeeAuth() {
-            const id = document.getElementById('eval-id-input').value.trim().toUpperCase();
-            if (!id) return alert("Please enter your Reference ID.");
+        function authenticateEmployee() {
+            const idValue = document.getElementById('id-input-field').value.trim().toUpperCase();
+            
+            if (!idValue) {
+                return alert("Please enter your Reference ID to continue.");
+            }
 
-            let type = "";
-            if (id.startsWith("ANN")) type = "annual";
-            else if (id.startsWith("PROB")) type = "probation";
-            else return alert("Invalid ID format. Must start with ANN- or PROB-.");
+            let sysType = "";
+            if (idValue.startsWith("ANN")) {
+                sysType = "annual";
+            } else if (idValue.startsWith("PROB")) {
+                sysType = "probation";
+            } else {
+                return alert("Invalid Reference ID format. Please check your email and try again.");
+            }
 
-            closeAckModal();
-            launchSystem(type, `?view=employee&id=${id}`);
+            // Close modal and launch with parameters
+            closeAcknowledgementModal();
+            launchPortal(sysType, `?view=employee&id=${idValue}`);
         }
 
         /**
-         * Main Launch Engine
+         * MODULE LAUNCHER
+         * Creates the secure iframe connection to the Google Apps Script Web Apps.
          */
-        function launchSystem(type, extraParams = "") {
-            const overlay = document.getElementById('app-overlay');
-            const frame = document.getElementById('portal-frame');
-            const loader = document.getElementById('frame-loader');
-            const statusText = document.getElementById('overlay-status');
+        function launchPortal(type, queryStr = "") {
+            const overlayContainer = document.getElementById('app-overlay');
+            const iframeElement = document.getElementById('main-application-frame');
+            const loadingMask = document.getElementById('loader-spinner-container');
+            const statusLabel = document.getElementById('system-status-indicator');
             
-            let targetUrl = (type === 'annual') ? URL_ANNUAL : URL_PROBATION;
+            // Resolve URL based on module type
+            let finalUrl = (type === 'annual') ? URL_ANNUAL : URL_PROBATION;
 
-            if (!targetUrl || targetUrl.includes("PASTE")) {
-                return alert("System Error: Web App URLs are not configured.");
+            if (!finalUrl || finalUrl.includes("PASTE")) {
+                return alert("Critical Configuration Error: System URLs are missing.");
             }
 
-            // Append parameters
-            if (extraParams) {
-                const separator = targetUrl.includes('?') ? '&' : '?';
-                const cleanParams = extraParams.startsWith('?') ? extraParams.substring(1) : extraParams;
-                targetUrl = targetUrl + separator + cleanParams;
+            // Correctly append Query Parameters
+            if (queryStr) {
+                const connChar = finalUrl.includes('?') ? '&' : '?';
+                const formattedQuery = queryStr.startsWith('?') ? queryStr.substring(1) : queryStr;
+                finalUrl = finalUrl + connChar + formattedQuery;
             }
 
-            overlay.style.display = 'flex';
-            loader.style.display = 'flex';
-            statusText.innerText = `Connecting to ${type.toUpperCase()} module...`;
+            // Display Overlay
+            overlayContainer.style.display = 'flex';
+            loadingMask.style.display = 'flex';
+            statusLabel.innerText = `Connecting to ${type.toUpperCase()} module...`;
             
-            frame.src = targetUrl;
+            // Set source and wait for load
+            iframeElement.src = finalUrl;
 
-            frame.onload = function() {
+            iframeElement.onload = function() {
+                // Buffer to allow internal scripts to settle
                 setTimeout(() => { 
-                    loader.style.display = 'none'; 
-                    statusText.innerText = "System Status: Online / Secure";
-                }, 1500);
+                    loadingMask.style.display = 'none'; 
+                    statusLabel.innerText = "System Status: Online / Secure Session";
+                }, 2000);
             };
         }
 
-        function exitSystem() {
-            document.getElementById('app-overlay').style.display = 'none';
-            document.getElementById('portal-frame').src = 'about:blank';
-            // Clear search params in browser URL
+        /**
+         * TERMINATION LOGIC
+         * Resets the portal state and clears URL history for security.
+         */
+        function terminateSession() {
+            const overlayContainer = document.getElementById('app-overlay');
+            const iframeElement = document.getElementById('main-application-frame');
+            
+            overlayContainer.style.display = 'none';
+            iframeElement.src = 'about:blank';
+            
+            // Clear URL history state for privacy
             window.history.pushState({}, document.title, window.location.pathname);
         }
     </script>
