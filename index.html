@@ -361,7 +361,7 @@
                 <h2 class="text-3xl font-black text-slate-900 uppercase mb-2 tracking-tighter">Master Verification Dashboard</h2>
                 <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-10">Departmental Data Hub</p>
                 
-                <div class="overflow-x-auto rounded-[1.5rem] border border-slate-100">
+                <div class="overflow-x-auto rounded-[1.5rem] border border-slate-100 max-h-[60vh] overflow-y-auto">
                     <table class="admin-grid-table">
                         <thead>
                             <tr>
@@ -371,6 +371,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Dynamic Content Injected Here -->
                             <tr>
                                 <td colspan="3">
                                     <div class="text-slate-200 py-16">
@@ -442,7 +443,7 @@
             </button>
         </div>
         <div class="flex-grow relative bg-slate-50">
-            <iframe id="portal-iframe-host" class="w-full h-full border-none" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals"></iframe>
+            <iframe id="portal-iframe-host" class="w-full h-full border-none" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-top-navigation"></iframe>
         </div>
     </div>
 
@@ -458,11 +459,14 @@
             document.getElementById('admin-login-modal').style.display = 'none';
         }
 
+        // Updated Verification Logic with Data Fetching
         function verifyAdminPin() {
             const pin = document.getElementById('admin-pin-display').value;
+            // Immediate local check for UX, then fetch data
             if (pin === "TDMHCQI/HR2025") {
                 closeAdminLogin();
                 openAdminDashboard();
+                fetchDashboardData(pin); // Fetch real data
             } else {
                 document.getElementById('admin-login-error').classList.remove('hidden');
             }
@@ -529,6 +533,71 @@
             document.getElementById('portal-iframe-host').src = 'about:blank';
             const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             window.history.pushState({path: cleanUrl}, '', cleanUrl);
+        }
+
+        // NEW: Fetch Logic for Admin Dashboard
+        async function fetchDashboardData(pin) {
+            const tbody = document.querySelector('.admin-grid-table tbody');
+            tbody.innerHTML = '<tr><td colspan="3"><div class="py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Syncing Secure Records...</p></div></td></tr>';
+
+            try {
+                // Fetch from both scripts concurrently
+                const [annRes, probRes] = await Promise.all([
+                    fetch(URL_ANNUAL + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => []),
+                    fetch(URL_PROBATION + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => [])
+                ]);
+
+                // Flatten lists
+                const annualList = Array.isArray(annRes) ? annRes : [];
+                const prob3List = Array.isArray(probRes) ? probRes.filter(r => r.phase === "3rd Month") : [];
+                const prob5List = Array.isArray(probRes) ? probRes.filter(r => r.phase === "5th Month") : [];
+
+                renderDashboardTable(annualList, prob3List, prob5List);
+
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-red-500 font-bold py-10">Data Sync Failed: ${e.message}</td></tr>`;
+            }
+        }
+
+        function renderDashboardTable(annual, prob3, prob5) {
+            const tbody = document.querySelector('.admin-grid-table tbody');
+            tbody.innerHTML = '';
+
+            const maxRows = Math.max(annual.length, prob3.length, prob5.length);
+
+            if (maxRows === 0) {
+                tbody.innerHTML = '<tr><td colspan="3"><div class="text-slate-200 py-16"><i class="fa-solid fa-database text-5xl mb-4 block"></i><span class="text-[9px] font-black uppercase tracking-[0.3em]">No Pending Verification Requests</span></div></td></tr>';
+                return;
+            }
+
+            for (let i = 0; i < maxRows; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${renderCellItem(annual[i], 'annual')}</td>
+                    <td>${renderCellItem(prob3[i], 'probation')}</td>
+                    <td>${renderCellItem(prob5[i], 'probation')}</td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        function renderCellItem(item, context) {
+            if (!item) return '';
+            return `
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left hover:border-blue-500 transition-all group shadow-sm hover:shadow-md">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="font-black text-[#1e3a8a] text-sm leading-tight">${item.name}</div>
+                        <span class="bg-blue-100 text-blue-800 text-[9px] font-bold px-1.5 py-0.5 rounded">PENDING</span>
+                    </div>
+                    <div class="text-[10px] text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
+                        Evaluator: <span class="text-slate-600 font-bold">${item.evaluator || 'N/A'}</span>
+                    </div>
+                    <button onclick="launchApplication('${context}', '?view=employee&id=${item.id}&sigColor=black')" 
+                            class="w-full bg-[#1e3a8a] text-white text-[10px] font-bold py-3 rounded-lg uppercase tracking-widest opacity-90 group-hover:opacity-100 transition-all hover:bg-blue-800">
+                        Review Record <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            `;
         }
 
         window.onload = function() {
