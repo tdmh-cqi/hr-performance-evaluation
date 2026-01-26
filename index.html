@@ -13,7 +13,6 @@
     <style>
         body { 
             font-family: 'Inter', sans-serif;
-            /* Subtle gradient and institutional background feel */
             background: radial-gradient(circle at top, #ffffff 0%, #f8fafc 100%);
             color: #1e293b;
             margin: 0;
@@ -23,7 +22,7 @@
 
         /* Subtle Background Watermark */
         body::before {
-            content: '\f0f8'; /* Hospital Icon */
+            content: '\f0f8';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             position: fixed;
@@ -136,7 +135,7 @@
         .fancy-line {
             height: 2px;
             background: linear-gradient(to right, transparent, #fbbf24 20%, #fbbf24 80%, transparent);
-            width: 450px; /* Longer */
+            width: 450px;
             max-width: 90vw;
             position: relative;
         }
@@ -147,9 +146,9 @@
             top: 50%;
             transform: translate(-50%, -50%);
             color: #fbbf24;
-            background: #ffffff; /* Matches background to clear space */
+            background: #ffffff;
             padding: 0 15px;
-            font-size: 14px; /* Bigger icon */
+            font-size: 14px;
         }
 
         /* Master Table Styling */
@@ -175,14 +174,13 @@
         }
 
         /* Modals */
-        /* Z-INDEX FIX: Admin Modal (20000) > App Overlay (10000) */
         #admin-modal, #admin-login-modal {
             display: none;
             position: fixed;
             inset: 0;
             z-index: 20000;
         }
-
+        
         #security-modal {
             display: none;
             position: fixed;
@@ -229,10 +227,8 @@
             box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.05);
         }
 
-        /* Typography Override */
         * { font-style: normal !important; }
         
-        /* Professional Serif Font for Footer Credit (Normal Style) */
         .brand-serif-normal { 
             font-family: 'Playfair Display', serif;
             font-style: normal !important; 
@@ -286,11 +282,8 @@
                     <i class="fa-solid fa-calendar-check text-2xl"></i>
                 </div>
                 <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tighter mb-4">Annual / Regular</h2>
-                <p class="text-slate-400 font-medium text-xs md:text-sm leading-relaxed mb-8 px-2">
-                    Evaluations for hospital staff who have reached regular employment status.
-                </p>
                 <div class="card-footer-link text-[#1e3a8a]">
-                    <span>Initialize Evaluator Form</span>
+                    <span>Initialize Form</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </div>
@@ -301,11 +294,8 @@
                     <i class="fa-solid fa-stopwatch text-2xl"></i>
                 </div>
                 <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tighter mb-4">Probationary</h2>
-                <p class="text-slate-400 font-medium text-xs md:text-sm leading-relaxed mb-8 px-2">
-                    Performance monitoring for 3rd and 5th month hiring milestones.
-                </p>
                 <div class="card-footer-link text-[#d97706]">
-                    <span>Start Assessment Cycle</span>
+                    <span>Start Assessment</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </div>
@@ -316,9 +306,6 @@
                     <i class="fa-solid fa-signature text-2xl"></i>
                 </div>
                 <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tighter mb-4">Employee Acknowledgement</h2>
-                <p class="text-slate-400 font-medium text-xs md:text-sm leading-relaxed mb-8 px-2">
-                    Access verified records and provide your digital signature to finalize.
-                </p>
                 <div class="card-footer-link text-[#16a34a]">
                     <span>Open Secured Record</span>
                     <i class="fa-solid fa-chevron-right"></i>
@@ -332,7 +319,6 @@
     <footer class="bg-[#0f172a] text-white py-16 px-10 text-center border-t-8 border-[#1e3a8a]">
         <div class="max-w-5xl mx-auto space-y-8">
             <div class="inline-block border border-slate-700 px-8 py-4 rounded-full bg-slate-800/20">
-                <!-- Professional Serif Font with stern white acronym (No Italics) -->
                 <p class="text-[#fbbf24] tracking-[0.05em] text-[11px] md:text-sm uppercase">
                     <span class="brand-serif-normal">Continuous Quality Improvement</span>
                     <span class="text-white font-black font-sans mx-1">(CQI)</span>
@@ -424,7 +410,7 @@
         </div>
     </div>
 
-    <!-- APP OVERLAY (TERMINATE BUTTON REMOVED) -->
+    <!-- APP OVERLAY -->
     <div id="app-overlay">
         <div class="bg-slate-900 text-white h-20 flex justify-between items-center px-8 md:px-12 shrink-0 border-b-4 border-blue-600/20 shadow-xl">
             <div class="flex items-center gap-5">
@@ -436,13 +422,11 @@
             </div>
             
             <!-- FALLBACK CLOSE ICON (Subtle X) -->
-            <!-- In case the inner Exit button fails, user needs a way out. This is standard safety UX but minimized. -->
             <button onclick="forceCloseOverlay()" class="text-slate-500 hover:text-red-500 transition-colors text-xl" title="Force Close Session">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
         <div class="flex-grow relative bg-slate-50">
-            <!-- ADDED allow-top-navigation to allow inner 'Exit' button to work -->
             <iframe id="portal-iframe-host" class="w-full h-full border-none" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-top-navigation"></iframe>
         </div>
     </div>
@@ -461,7 +445,6 @@
 
         function verifyAdminPin() {
             const pin = document.getElementById('admin-pin-display').value;
-            // Checks locally first for immediate UX, then fetches data
             if (pin === "TDMHCQI/HR2025") {
                 closeAdminLogin();
                 openAdminDashboard();
@@ -522,12 +505,11 @@
         function forceCloseOverlay() {
             document.getElementById('app-overlay').style.display = 'none';
             document.getElementById('portal-iframe-host').src = 'about:blank';
-            // Clean URL just in case
             const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             window.history.pushState({path: cleanUrl}, '', cleanUrl);
         }
 
-        // NEW: Fetch Logic for Admin Dashboard
+        // FETCH LOGIC
         async function fetchDashboardData(pin) {
             const tbody = document.querySelector('.admin-grid-table tbody');
             tbody.innerHTML = '<tr><td colspan="3"><div class="py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Syncing Secure Records...</p></div></td></tr>';
