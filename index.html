@@ -181,6 +181,9 @@
             z-index: 10000;
         }
 
+        /* FIX: Higher Z-Index for Admin Dashboard to ensure it sits over overlays */
+        #admin-modal { z-index: 20000; }
+
         .modal-backdrop {
             background: rgba(15, 23, 42, 0.96);
             backdrop-filter: blur(8px);
@@ -416,13 +419,12 @@
             </div>
             
             <!-- FALLBACK CLOSE ICON (Subtle X) -->
-            <!-- In case the inner Exit button fails, user needs a way out. This is standard safety UX but minimized. -->
             <button onclick="forceCloseOverlay()" class="text-slate-500 hover:text-red-500 transition-colors text-xl" title="Force Close Session">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
         <div class="flex-grow relative bg-slate-50">
-            <!-- ADDED allow-top-navigation to allow inner 'Exit' button to work -->
+            <!-- CRITICAL FIX: allow-top-navigation -->
             <iframe id="portal-iframe-host" class="w-full h-full border-none" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-top-navigation"></iframe>
         </div>
     </div>
@@ -444,7 +446,7 @@
             if (pin === "TDMHCQI/HR2025") {
                 closeAdminLogin();
                 openAdminDashboard();
-                fetchDashboardData(pin); // Fetch real data
+                fetchDashboardData(pin); // FIX: Fetch Logic
             } else {
                 document.getElementById('admin-login-error').classList.remove('hidden');
             }
@@ -497,28 +499,23 @@
             iframe.src = url;
         }
 
-        // Simple Fallback Closure
         function forceCloseOverlay() {
             document.getElementById('app-overlay').style.display = 'none';
             document.getElementById('portal-iframe-host').src = 'about:blank';
-            // Clean URL just in case
             const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             window.history.pushState({path: cleanUrl}, '', cleanUrl);
         }
 
-        // NEW: Fetch Logic for Admin Dashboard
         async function fetchDashboardData(pin) {
             const tbody = document.querySelector('.admin-grid-table tbody');
             tbody.innerHTML = '<tr><td colspan="3"><div class="py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Syncing Secure Records...</p></div></td></tr>';
 
             try {
-                // Fetch from both scripts concurrently
                 const [annRes, probRes] = await Promise.all([
                     fetch(URL_ANNUAL + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => []),
                     fetch(URL_PROBATION + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => [])
                 ]);
 
-                // Flatten lists
                 const annualList = Array.isArray(annRes) ? annRes : [];
                 const prob3List = Array.isArray(probRes) ? probRes.filter(r => r.phase === "3rd Month") : [];
                 const prob5List = Array.isArray(probRes) ? probRes.filter(r => r.phase === "5th Month") : [];
@@ -578,12 +575,10 @@
             const view = urlSearch.get('view');
 
             if (autoId && !system) {
-                // Employee Direct Access
                 openSecurityGateway();
                 document.getElementById('record-id-field').value = autoId;
                 setTimeout(() => validateAndLaunch(), 800);
             } else if (system && view === 'admin') {
-                // HR Email Link Access
                 showAdminLogin();
             }
         };
