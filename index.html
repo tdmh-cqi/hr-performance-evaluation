@@ -501,12 +501,19 @@
             iframe.src = url;
         }
 
-        // Simple Fallback Closure
+        // Simple Fallback Closure - With Security Fix
         function forceCloseOverlay() {
             document.getElementById('app-overlay').style.display = 'none';
             document.getElementById('portal-iframe-host').src = 'about:blank';
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.pushState({path: cleanUrl}, '', cleanUrl);
+            try {
+                // Safely clear search parameters if we aren't executing in an isolated sandbox where it's disallowed
+                if (!window.location.href.startsWith('blob:')) {
+                    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                    window.history.pushState({path: cleanUrl}, '', cleanUrl);
+                }
+            } catch (e) {
+                console.warn('History state update skipped due to restricted environment.');
+            }
         }
 
         // FETCH LOGIC
