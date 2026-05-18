@@ -3,603 +3,524 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TDMH Performance Evaluation Portal</title>
-    
-    <!-- Frameworks -->
+    <title>TDMH HR Master Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top, #ffffff 0%, #f8fafc 100%);
-            color: #1e293b;
-            margin: 0;
-            overflow-x: hidden;
-            min-height: 100vh;
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .tab-active { border-bottom: 4px solid #1e3a8a; color: #1e3a8a; font-weight: 900; }
+        .tab-inactive { color: #64748b; font-weight: 600; border-bottom: 4px solid transparent; }
+        .tab-inactive:hover { color: #1e3a8a; border-bottom: 4px solid #cbd5e1; }
+        
+        /* Modal Animation */
+        .modal-enter { animation: fadeInScale 0.3s ease-out forwards; }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        /* Subtle Background Watermark */
-        body::before {
-            content: '\f0f8';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
+        /* Custom Checkbox Styling for Batch Print */
+        .batch-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            accent-color: #1e3a8a;
+        }
+
+        /* Loader */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #ffffff;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Toast Notification */
+        #toast-container {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 40rem;
-            color: #1e3a8a;
-            opacity: 0.02;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .brand-serif { font-family: 'Playfair Display', serif; }
-
-        /* Premium Dashboard Cards */
-        .eval-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            padding: 2.5rem 2rem;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 100%;
-            border: 1px solid rgba(226, 232, 240, 0.5);
-            border-bottom: 5px solid transparent;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .eval-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
-            background: white;
-        }
-
-        .card-blue { border-bottom-color: #1e3a8a; }
-        .card-amber { border-bottom-color: #fbbf24; }
-        .card-green { border-bottom-color: #22c55e; }
-
-        .icon-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 2rem;
-            transition: all 0.3s ease;
-        }
-
-        .card-footer-link {
-            margin-top: auto;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1.5rem;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0.6;
-            transition: opacity 0.3s;
-        }
-
-        .eval-card:hover .card-footer-link {
-            opacity: 1;
-        }
-
-        /* HR Admin Trigger */
-        .hr-admin-top-btn {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            z-index: 9999;
-            background-color: #1e3a8a;
-            color: white;
-            padding: 10px 22px;
-            border-radius: 0.6rem;
-            display: flex;
-            align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 700;
-            font-size: 0.7rem;
-            letter-spacing: 0.05em;
         }
-
-        .hr-admin-top-btn:hover {
-            background-color: #172554;
-            transform: translateY(-2px);
-        }
-
-        /* Fancy Underline */
-        .fancy-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 2rem;
-            width: 100%;
-        }
-        .fancy-line {
-            height: 2px;
-            background: linear-gradient(to right, transparent, #fbbf24 20%, #fbbf24 80%, transparent);
-            width: 450px;
-            max-width: 90vw;
-            position: relative;
-        }
-        .fancy-line::before {
-            content: '♦';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            color: #fbbf24;
-            background: #ffffff;
-            padding: 0 15px;
-            font-size: 14px;
-        }
-
-        /* Master Table Styling */
-        .admin-grid-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-        .admin-grid-table th {
-            background: #1e3a8a;
+        .toast {
+            background-color: #ef4444; /* red-500 */
             color: white;
-            padding: 1.25rem;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            text-align: center;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        .admin-grid-table td {
-            padding: 1.5rem;
-            border: 1px solid #f1f5f9;
-            vertical-align: top;
-            text-align: center;
-        }
-
-        /* Modals */
-        #admin-modal, #admin-login-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 20000;
-        }
-        
-        #security-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 30000;
-        }
-
-        #app-overlay {
-            display: none;
-            flex-direction: column;
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            background: white;
-        }
-
-        .modal-backdrop {
-            background: rgba(15, 23, 42, 0.96);
-            backdrop-filter: blur(8px);
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        /* Professional Inputs */
-        .clean-input {
-            width: 100%;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            padding: 1.25rem;
-            border-radius: 1rem;
-            text-align: center;
-            font-weight: 800;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .clean-input:focus {
-            border-color: #1e3a8a;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.05);
-        }
-
-        * { font-style: normal !important; }
-        
-        .brand-serif-normal { 
-            font-family: 'Playfair Display', serif;
-            font-style: normal !important; 
-        }
-
-        @media (max-width: 640px) {
-            .eval-card h2 { font-size: 1.05rem !important; }
-            .fancy-line { width: 80vw; }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen relative">
+<body class="text-slate-800 min-h-screen flex flex-col">
 
-    <script>
-        const URL_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
-        const URL_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
-    </script>
-
-    <!-- HEADER AREA -->
-    <header class="pt-24 pb-16 px-8 text-center relative">
-        <button onclick="showAdminLogin()" class="hr-admin-top-btn">
-            <i class="fa-solid fa-lock text-xs"></i>
-            <span>HR Admin Access</span>
-        </button>
-
-        <div class="max-w-5xl mx-auto">
-            <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
-                 alt="TDMH Logo" class="h-32 md:h-40 mx-auto mb-8 drop-shadow-sm">
-            
-            <div class="flex flex-col items-center">
-                <h1 class="brand-serif text-2xl md:text-3xl font-black text-[#0f172a] leading-tight tracking-tight uppercase">
-                    Performance Evaluation Portal
-                </h1>
-                <p class="brand-serif text-lg md:text-xl font-black text-[#1e3a8a] mt-2 opacity-90">
-                    (P.E.P.)
-                </p>
-                <div class="fancy-divider">
-                    <div class="fancy-line"></div>
-                </div>
+    <!-- LOGIN OVERLAY -->
+    <div id="login-overlay" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
+        <div class="bg-white p-10 rounded-[2rem] shadow-2xl max-w-md w-full text-center">
+            <div class="w-20 h-20 bg-blue-50 text-brand-primary-blue rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner text-[#1e3a8a]">
+                <i class="fa-solid fa-lock"></i>
             </div>
-        </div>
-    </header>
-
-    <!-- DASHBOARD GRID -->
-    <main class="flex-grow flex items-center justify-center pb-24 pt-4 px-6 md:px-12">
-        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-            
-            <!-- ANNUAL / REGULAR -->
-            <div class="eval-card card-blue group" onclick="launchApplication('annual')">
-                <div class="icon-circle bg-blue-50 text-[#1e3a8a] group-hover:bg-[#1e3a8a] group-hover:text-white">
-                    <i class="fa-solid fa-calendar-check text-2xl"></i>
-                </div>
-                <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tighter mb-4">Annual / Regular</h2>
-                <div class="card-footer-link text-[#1e3a8a]">
-                    <span>Initialize Form</span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-
-            <!-- PROBATIONARY -->
-            <div class="eval-card card-amber group" onclick="launchApplication('probation')">
-                <div class="icon-circle bg-amber-50 text-[#d97706] group-hover:bg-[#facc15] group-hover:text-slate-900">
-                    <i class="fa-solid fa-stopwatch text-2xl"></i>
-                </div>
-                <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tighter mb-4">Probationary</h2>
-                <div class="card-footer-link text-[#d97706]">
-                    <span>Start Assessment</span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-
-            <!-- ACKNOWLEDGEMENT -->
-            <div class="eval-card card-green group" onclick="openSecurityGateway()">
-                <div class="icon-circle bg-green-50 text-[#16a34a] group-hover:bg-[#22c55e] group-hover:text-white">
-                    <i class="fa-solid fa-signature text-2xl"></i>
-                </div>
-                <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tighter mb-4">Employee Acknowledgement</h2>
-                <div class="card-footer-link text-[#16a34a]">
-                    <span>Open Secured Record</span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-[#0f172a] text-white py-16 px-10 text-center border-t-8 border-[#1e3a8a]">
-        <div class="max-w-5xl mx-auto space-y-8">
-            <div class="inline-block border border-slate-700 px-8 py-4 rounded-full bg-slate-800/20">
-                <p class="text-[#fbbf24] tracking-[0.05em] text-[11px] md:text-sm uppercase">
-                    <span class="brand-serif-normal">Continuous Quality Improvement</span>
-                    <span class="text-white font-black font-sans mx-1">(CQI)</span>
-                    <span class="brand-serif-normal">Optimization</span>
-                </p>
-            </div>
-            <div>
-                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">
-                    © 2026 TAYTAY DOCTORS MULTISPECIALTY HOSPITAL. ALL RIGHTS RESERVED.
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- ADMIN LOGIN MODAL -->
-    <div id="admin-login-modal">
-        <div class="modal-backdrop">
-            <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-10 text-center relative shadow-2xl">
-                <button onclick="closeAdminLogin()" class="absolute top-6 right-6 text-slate-300 text-3xl hover:text-red-500 transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <h3 class="text-xl font-black uppercase mb-1 tracking-tighter">HR Authorization</h3>
-                <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.1em] mb-8">Access Master Records</p>
-                
-                <input type="password" id="admin-pin-display" placeholder="••••••••" 
-                       class="clean-input text-2xl tracking-[0.8em] mb-6 focus:border-slate-900">
-                
-                <button onclick="verifyAdminPin()" class="w-full bg-[#1e3a8a] text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-blue-950 active:scale-95 transition-all">
-                    Unlock Portal
-                </button>
-                <p id="admin-login-error" class="text-red-600 font-bold text-[10px] mt-6 uppercase hidden tracking-widest">Unauthorized Entry</p>
-            </div>
+            <h2 class="text-2xl font-black text-slate-900 mb-2 uppercase tracking-tighter">HR Master Portal</h2>
+            <p class="text-sm text-slate-500 font-bold mb-8">Enter administrative PIN to access records.</p>
+            <input type="password" id="hr-pin" class="w-full border-2 border-slate-200 p-4 rounded-xl text-center text-2xl font-black outline-none focus:border-[#1e3a8a] transition tracking-widest mb-4" placeholder="••••••••" onkeypress="if(event.key === 'Enter') attemptLogin()">
+            <button onclick="attemptLogin()" class="w-full bg-[#1e3a8a] hover:bg-blue-800 text-white font-black py-4 rounded-xl uppercase tracking-widest transition transform active:scale-95 flex justify-center items-center gap-2">
+                <span id="login-text">Authenticate</span>
+                <div id="login-loader" class="spinner hidden"></div>
+            </button>
+            <p id="login-error" class="text-red-500 font-bold text-xs mt-4 hidden"><i class="fa-solid fa-triangle-exclamation mr-1"></i> <span id="login-error-msg">Invalid PIN provided.</span></p>
         </div>
     </div>
 
-    <!-- MASTER ADMIN MODAL -->
-    <div id="admin-modal">
-        <div class="modal-backdrop">
-            <div class="bg-white w-full max-w-6xl rounded-[3rem] p-12 relative shadow-2xl border-[10px] border-slate-50 overflow-hidden">
-                <button onclick="closeAdminDashboard()" class="absolute top-10 right-10 text-slate-300 hover:text-red-500 text-5xl transition-all">
-                    <i class="fa-solid fa-circle-xmark"></i>
-                </button>
-                <h2 class="text-3xl font-black text-slate-900 uppercase mb-2 tracking-tighter">Master Verification Dashboard</h2>
-                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-10">Departmental Data Hub</p>
+    <!-- MAIN PORTAL UI -->
+    <div id="main-portal" class="hidden flex-col flex-grow">
+        <!-- Top Navigation -->
+        <nav class="bg-[#1e3a8a] text-white p-6 shadow-lg border-b-[8px] border-[#fbbf24]">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <i class="fa-solid fa-hospital text-3xl"></i>
+                    <div>
+                        <h1 class="font-black text-2xl uppercase tracking-tighter leading-none">CQI / HR Gateway</h1>
+                        <p class="text-[10px] text-blue-200 font-black tracking-[0.4em] uppercase">Master Administration Panel</p>
+                    </div>
+                </div>
                 
-                <div class="overflow-x-auto rounded-[1.5rem] border border-slate-100 max-h-[60vh] overflow-y-auto">
-                    <table class="admin-grid-table">
+                <!-- System Toggle -->
+                <div class="bg-blue-900 p-1 rounded-xl flex shadow-inner border border-blue-800">
+                    <button onclick="switchSystem('annual')" id="btn-sys-annual" class="px-6 py-2 rounded-lg font-black text-sm transition-all bg-white text-[#1e3a8a] shadow">Annual Eval</button>
+                    <button onclick="switchSystem('probation')" id="btn-sys-probation" class="px-6 py-2 rounded-lg font-black text-sm transition-all text-white hover:text-blue-200">Probationary</button>
+                </div>
+                
+                <button onclick="refreshData()" class="text-white hover:text-[#fbbf24] transition font-black text-sm flex items-center gap-2">
+                    <i id="refresh-icon" class="fa-solid fa-arrows-rotate"></i> Sync Data
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow p-6 sm:p-10 max-w-7xl mx-auto w-full">
+            
+            <!-- Dashboard Tabs (Pending vs Completed) -->
+            <div class="flex gap-8 border-b-2 border-slate-200 mb-8">
+                <button onclick="switchTab('pending')" id="tab-pending" class="pb-4 px-2 tab-active text-lg uppercase tracking-tight flex items-center gap-2">
+                    <i class="fa-solid fa-clock text-amber-500"></i> Pending HR Audit
+                </button>
+                <button onclick="switchTab('completed')" id="tab-completed" class="pb-4 px-2 tab-inactive text-lg uppercase tracking-tight flex items-center gap-2">
+                    <i class="fa-solid fa-check-double text-green-500"></i> Completed Records
+                </button>
+            </div>
+
+            <!-- Loader -->
+            <div id="data-loader" class="text-center py-20 hidden">
+                <div class="hospital-master-spinner border-[#1e3a8a] mx-auto mb-4"></div>
+                <p class="font-black text-slate-400 tracking-widest uppercase text-sm">Fetching Server Data...</p>
+            </div>
+
+            <!-- TAB 1: PENDING LIST -->
+            <div id="view-pending" class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr>
-                                <th>Annual / Regular</th>
-                                <th>3rd Month (Prob)</th>
-                                <th>5th Month (Prob)</th>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b-2 border-slate-100">
+                                <th class="p-6 font-black">Record ID</th>
+                                <th class="p-6 font-black">Evaluatee Name</th>
+                                <th class="p-6 font-black">Evaluator</th>
+                                <th class="p-6 font-black">Phase / Period</th>
+                                <th class="p-6 font-black text-center">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Dynamic Content Injected Here -->
-                            <tr>
-                                <td colspan="3">
-                                    <div class="text-slate-200 py-16">
-                                        <i class="fa-solid fa-database text-5xl mb-4 block"></i>
-                                        <span class="text-[9px] font-black uppercase tracking-[0.3em]">No Pending Verification Requests</span>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tbody id="table-pending-body" class="divide-y divide-slate-100">
+                            <!-- JS Injected Rows -->
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SECURITY GATEWAY MODAL -->
-    <div id="security-modal">
-        <div class="modal-backdrop">
-            <div class="bg-white w-full max-w-md rounded-[2.5rem] p-12 text-center relative shadow-2xl">
-                <button onclick="closeSecurityGateway()" class="absolute top-8 right-8 text-slate-300 text-3xl hover:text-red-500 transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <h3 class="text-xl font-black uppercase mb-1 tracking-tighter">Identity Verification</h3>
-                <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.1em] mb-8">Enter Evaluation Reference ID</p>
-                
-                <input type="text" id="record-id-field" placeholder="••••••••" 
-                       class="clean-input text-xl uppercase tracking-widest mb-6">
-                
-                <button onclick="validateAndLaunch()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-slate-700 active:scale-95 transition-all">
-                    Access Record
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- APP OVERLAY -->
-    <div id="app-overlay">
-        <div class="bg-slate-900 text-white h-20 flex justify-between items-center px-8 md:px-12 shrink-0 border-b-4 border-blue-600/20 shadow-xl">
-            <div class="flex items-center gap-5">
-                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-8 bg-white p-1 rounded">
-                <div class="flex flex-col">
-                    <span class="text-[9px] font-black uppercase tracking-[0.3em] text-blue-400 leading-none mb-1">Authenticated</span>
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest block">Secure Data Stream</span>
+                <div id="pending-empty" class="hidden text-center py-16 text-slate-400">
+                    <i class="fa-solid fa-inbox text-5xl mb-4 opacity-50"></i>
+                    <p class="font-bold text-lg">No pending evaluations require HR audit.</p>
                 </div>
             </div>
-            
-            <!-- FALLBACK CLOSE ICON (Subtle X) -->
-            <button onclick="forceCloseOverlay()" class="text-slate-500 hover:text-red-500 transition-colors text-xl" title="Force Close Session">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <div class="flex-grow relative bg-slate-50">
-            <iframe id="portal-iframe-host" class="w-full h-full border-none" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-top-navigation"></iframe>
-        </div>
-    </div>
 
-    <script>
-        function showAdminLogin() {
-            document.getElementById('admin-login-modal').style.display = 'block';
-            document.getElementById('admin-login-error').classList.add('hidden');
-            document.getElementById('admin-pin-display').value = '';
-            setTimeout(() => document.getElementById('admin-pin-display').focus(), 200);
-        }
-
-        function closeAdminLogin() {
-            document.getElementById('admin-login-modal').style.display = 'none';
-        }
-
-        function verifyAdminPin() {
-            const pin = document.getElementById('admin-pin-display').value;
-            if (pin === "TDMHCQI/HR2025") {
-                closeAdminLogin();
-                openAdminDashboard();
-                fetchDashboardData(pin); // Fetch real data
-            } else {
-                document.getElementById('admin-login-error').classList.remove('hidden');
-            }
-        }
-
-        function openAdminDashboard() {
-            document.getElementById('admin-modal').style.display = 'block';
-        }
-        
-        function closeAdminDashboard() { 
-            document.getElementById('admin-modal').style.display = 'none'; 
-        }
-        
-        function openSecurityGateway() { 
-            document.getElementById('security-modal').style.display = 'block'; 
-            setTimeout(() => document.getElementById('record-id-field').focus(), 200);
-        }
-        
-        function closeSecurityGateway() { 
-            document.getElementById('security-modal').style.display = 'none'; 
-        }
-
-        function validateAndLaunch() {
-            const id = document.getElementById('record-id-field').value.trim().toUpperCase();
-            if (!id) return;
-            
-            let context = "";
-            if (id.startsWith('ANN')) context = 'annual';
-            else if (id.startsWith('PROB')) context = 'probation';
-            else {
-                alert("Invalid Reference ID Format. Ensure it starts with ANN- or PROB-");
-                return;
-            }
-
-            closeSecurityGateway();
-            launchApplication(context, `?view=employee&id=${id}&sigColor=black`);
-        }
-
-        function launchApplication(context, params = "") {
-            const overlay = document.getElementById('app-overlay');
-            const iframe = document.getElementById('portal-iframe-host');
-            let url = (context === 'annual') ? URL_ANNUAL : URL_PROBATION;
-            
-            if (params) {
-                const connector = url.includes('?') ? '&' : '?';
-                url += connector + params.replace(/^\?/, '');
-            }
-            
-            overlay.style.display = 'flex';
-            iframe.src = url;
-        }
-
-        // Simple Fallback Closure - With Security Fix
-        function forceCloseOverlay() {
-            document.getElementById('app-overlay').style.display = 'none';
-            document.getElementById('portal-iframe-host').src = 'about:blank';
-            try {
-                // Safely clear search parameters if we aren't executing in an isolated sandbox where it's disallowed
-                if (!window.location.href.startsWith('blob:')) {
-                    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                    window.history.pushState({path: cleanUrl}, '', cleanUrl);
-                }
-            } catch (e) {
-                console.warn('History state update skipped due to restricted environment.');
-            }
-        }
-
-        // FETCH LOGIC
-        async function fetchDashboardData(pin) {
-            const tbody = document.querySelector('.admin-grid-table tbody');
-            tbody.innerHTML = '<tr><td colspan="3"><div class="py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Syncing Secure Records...</p></div></td></tr>';
-
-            try {
-                // Fetch from both scripts concurrently
-                const [annRes, probRes] = await Promise.all([
-                    fetch(URL_ANNUAL + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => []),
-                    fetch(URL_PROBATION + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => [])
-                ]);
-
-                // Flatten lists
-                const annualList = Array.isArray(annRes) ? annRes : [];
-                const prob3List = Array.isArray(probRes) ? probRes.filter(r => r.phase === "3rd Month") : [];
-                const prob5List = Array.isArray(probRes) ? probRes.filter(r => r.phase === "5th Month") : [];
-
-                renderDashboardTable(annualList, prob3List, prob5List);
-
-            } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-red-500 font-bold py-10">Data Sync Failed: ${e.message}</td></tr>`;
-            }
-        }
-
-        function renderDashboardTable(annual, prob3, prob5) {
-            const tbody = document.querySelector('.admin-grid-table tbody');
-            tbody.innerHTML = '';
-
-            const maxRows = Math.max(annual.length, prob3.length, prob5.length);
-
-            if (maxRows === 0) {
-                tbody.innerHTML = '<tr><td colspan="3"><div class="text-slate-200 py-16"><i class="fa-solid fa-database text-5xl mb-4 block"></i><span class="text-[9px] font-black uppercase tracking-[0.3em]">No Pending Verification Requests</span></div></td></tr>';
-                return;
-            }
-
-            for (let i = 0; i < maxRows; i++) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${renderCellItem(annual[i], 'annual')}</td>
-                    <td>${renderCellItem(prob3[i], 'probation')}</td>
-                    <td>${renderCellItem(prob5[i], 'probation')}</td>
-                `;
-                tbody.appendChild(row);
-            }
-        }
-
-        function renderCellItem(item, context) {
-            if (!item) return '';
-            return `
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left hover:border-blue-500 transition-all group shadow-sm hover:shadow-md">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="font-black text-[#1e3a8a] text-sm leading-tight">${item.name}</div>
-                        <span class="bg-blue-100 text-blue-800 text-[9px] font-bold px-1.5 py-0.5 rounded">PENDING</span>
+            <!-- TAB 2: COMPLETED LIST (WITH BATCH PRINT) -->
+            <div id="view-completed" class="hidden bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden">
+                
+                <!-- Batch Print Toolbar -->
+                <div class="bg-green-50 p-6 border-b-2 border-green-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()" class="batch-checkbox">
+                        <label for="selectAllCheckbox" class="font-black text-green-900 uppercase text-sm tracking-widest cursor-pointer select-none">Select All Records</label>
                     </div>
-                    <div class="text-[10px] text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
-                        Evaluator: <span class="text-slate-600 font-bold">${item.evaluator || 'N/A'}</span>
-                    </div>
-                    <button onclick="launchApplication('${context}', '?view=admin&id=${item.id}')" 
-                            class="w-full bg-[#1e3a8a] text-white text-[10px] font-bold py-3 rounded-lg uppercase tracking-widest opacity-90 group-hover:opacity-100 transition-all hover:bg-blue-800">
-                        Review Record <i class="fa-solid fa-arrow-right ml-1"></i>
+                    <button onclick="executeBatchPrint()" class="bg-[#16a34a] hover:bg-green-700 text-white px-8 py-3 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg transition active:scale-95 flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i> Batch Print Selected
                     </button>
                 </div>
-            `;
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b-2 border-slate-100">
+                                <th class="p-6 font-black w-10 text-center"><i class="fa-solid fa-check-square"></i></th>
+                                <th class="p-6 font-black">Record ID</th>
+                                <th class="p-6 font-black">Evaluatee Name</th>
+                                <th class="p-6 font-black">Date Completed</th>
+                                <th class="p-6 font-black text-center">Master PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-completed-body" class="divide-y divide-slate-100">
+                            <!-- JS Injected Rows -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="completed-empty" class="hidden text-center py-16 text-slate-400">
+                    <i class="fa-solid fa-folder-open text-5xl mb-4 opacity-50"></i>
+                    <p class="font-bold text-lg">No completed records found.</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- STRICT MODAL FOR HR VERIFICATION (BUG FIX: Clicking outside won't close) -->
+    <div id="audit-modal" class="fixed inset-0 bg-slate-900/95 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-5xl h-[90vh] rounded-[2rem] shadow-2xl flex flex-col overflow-hidden modal-enter border-[8px] border-amber-400 relative">
+            
+            <!-- Modal Header -->
+            <div class="bg-[#1e3a8a] p-4 flex justify-between items-center text-white">
+                <div class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400"></i> HR Verification Gateway</div>
+                <!-- Explicit Close Button -->
+                <button onclick="closeAuditModal()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-black text-xs uppercase tracking-widest transition">
+                    <i class="fa-solid fa-xmark mr-1"></i> Close / Cancel
+                </button>
+            </div>
+            
+            <!-- iFrame Container -->
+            <div class="flex-grow w-full h-full relative bg-slate-100">
+                <div id="iframe-loader" class="absolute inset-0 flex flex-col items-center justify-center z-0">
+                    <div class="spinner border-[#1e3a8a] border-t-amber-400 w-12 h-12 mb-4"></div>
+                    <p class="font-bold text-slate-500 uppercase tracking-widest text-xs">Loading Secure Connection...</p>
+                </div>
+                <iframe id="audit-iframe" class="w-full h-full absolute inset-0 z-10 border-none" src="" onload="document.getElementById('iframe-loader').style.display='none'"></iframe>
+            </div>
+            
+            <!-- Modal Footer Hint -->
+            <div class="bg-amber-50 p-3 text-center border-t border-amber-200">
+                <p class="text-amber-800 text-[10px] font-black uppercase tracking-widest"><i class="fa-solid fa-circle-info mr-1"></i> Notice: You must click the red 'Close' button at the top to exit this screen.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container for Custom Errors (replaces standard browser alerts) -->
+    <div id="toast-container"></div>
+
+    <script>
+        /**
+         * =====================================================================
+         * ⚠️ CRITICAL CONFIGURATION: PASTE YOUR GOOGLE APPS SCRIPT URLS HERE
+         * =====================================================================
+         */
+        const ANNUAL_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
+        const PROBATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
+        
+        // =====================================================================
+
+        let currentSystem = 'annual'; // 'annual' or 'probation'
+        let currentTab = 'pending';   // 'pending' or 'completed'
+        let ACTIVE_PIN = "";
+        let pendingData = [];
+        let completedData = [];
+
+        // Custom Toast Notification Function (Replaces window.alert)
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-2"></i> ${message}`;
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
         }
 
-        window.onload = function() {
-            const urlSearch = new URLSearchParams(window.location.search);
-            const autoId = urlSearch.get('id');
-            const system = urlSearch.get('sys');
-            const view = urlSearch.get('view');
+        // Custom Confirm Modal (Replaces window.confirm)
+        // Since we are in an environment where standard prompts might fail, we will use a simpler check for now or rely on custom UI if needed.
+        // For the batch print and closing functions, we'll keep standard confirm but catch if it fails, or provide UI alternatives.
 
-            if (autoId && !system) {
-                // Employee Direct Access
-                openSecurityGateway();
-                document.getElementById('record-id-field').value = autoId;
-                setTimeout(() => validateAndLaunch(), 800);
-            } else if (system && view === 'admin') {
-                // HR Email Link Access
-                showAdminLogin();
+        function attemptLogin() {
+            const pinInput = document.getElementById('hr-pin').value;
+            if(!pinInput) return;
+            
+            ACTIVE_PIN = pinInput;
+            document.getElementById('login-text').innerText = "Verifying...";
+            document.getElementById('login-loader').classList.remove('hidden');
+            document.getElementById('login-error').classList.add('hidden');
+
+            fetchData(true); // true = isLoginAttempt
+        }
+
+        function switchSystem(sys) {
+            currentSystem = sys;
+            
+            // UI Toggle logic
+            const btnAnn = document.getElementById('btn-sys-annual');
+            const btnProb = document.getElementById('btn-sys-probation');
+            
+            if(sys === 'annual') {
+                btnAnn.className = "px-6 py-2 rounded-lg font-black text-sm transition-all bg-white text-[#1e3a8a] shadow";
+                btnProb.className = "px-6 py-2 rounded-lg font-black text-sm transition-all text-white hover:text-blue-200";
+            } else {
+                btnProb.className = "px-6 py-2 rounded-lg font-black text-sm transition-all bg-white text-[#1e3a8a] shadow";
+                btnAnn.className = "px-6 py-2 rounded-lg font-black text-sm transition-all text-white hover:text-blue-200";
             }
-        };
+            
+            // Clear checkmarks and switch data
+            document.getElementById('selectAllCheckbox').checked = false;
+            fetchData();
+        }
 
-        document.getElementById('admin-pin-display').addEventListener('keypress', (e) => { if(e.key === 'Enter') verifyAdminPin(); });
-        document.getElementById('record-id-field').addEventListener('keypress', (e) => { if(e.key === 'Enter') validateAndLaunch(); });
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            const tp = document.getElementById('tab-pending');
+            const tc = document.getElementById('tab-completed');
+            const vp = document.getElementById('view-pending');
+            const vc = document.getElementById('view-completed');
+            
+            if(tabName === 'pending') {
+                tp.className = "pb-4 px-2 tab-active text-lg uppercase tracking-tight flex items-center gap-2";
+                tc.className = "pb-4 px-2 tab-inactive text-lg uppercase tracking-tight flex items-center gap-2";
+                vp.classList.remove('hidden');
+                vc.classList.add('hidden');
+            } else {
+                tc.className = "pb-4 px-2 tab-active text-lg uppercase tracking-tight flex items-center gap-2";
+                tp.className = "pb-4 px-2 tab-inactive text-lg uppercase tracking-tight flex items-center gap-2";
+                vc.classList.remove('hidden');
+                vp.classList.add('hidden');
+            }
+        }
+
+        function refreshData() {
+            document.getElementById('refresh-icon').classList.add('fa-spin');
+            fetchData();
+        }
+
+        function fetchData(isLoginAttempt = false) {
+            const endpoint = currentSystem === 'annual' ? ANNUAL_SCRIPT_URL : PROBATION_SCRIPT_URL;
+
+            // BUG FIX: Prevent silent failure if user hasn't setup their Apps Script URLs yet
+            if (endpoint.includes("YOUR_")) {
+                document.getElementById('refresh-icon').classList.remove('fa-spin');
+                if(isLoginAttempt) {
+                    document.getElementById('login-text').innerText = "Authenticate";
+                    document.getElementById('login-loader').classList.add('hidden');
+                    document.getElementById('login-error-msg').innerText = "Setup Required: Paste your Web App URLs in the code.";
+                    document.getElementById('login-error').classList.remove('hidden');
+                } else {
+                    showToast("System Setup Incomplete: Please configure your Web App URLs.");
+                }
+                return;
+            }
+
+            const fullUrl = `${endpoint}?view=adminData&pin=${encodeURIComponent(ACTIVE_PIN)}`;
+
+            if(!isLoginAttempt) {
+                document.getElementById('view-pending').classList.add('hidden');
+                document.getElementById('view-completed').classList.add('hidden');
+                document.getElementById('data-loader').classList.remove('hidden');
+            }
+
+            fetch(fullUrl)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('refresh-icon').classList.remove('fa-spin');
+                    
+                    if (data.error) {
+                        if(isLoginAttempt) {
+                            document.getElementById('login-text').innerText = "Authenticate";
+                            document.getElementById('login-loader').classList.add('hidden');
+                            document.getElementById('login-error-msg').innerText = "Invalid PIN provided.";
+                            document.getElementById('login-error').classList.remove('hidden');
+                            ACTIVE_PIN = "";
+                        } else {
+                            showToast("Session expired or unauthorized. Please reload the page.");
+                            setTimeout(() => location.reload(), 2000);
+                        }
+                        return;
+                    }
+
+                    // Success
+                    if(isLoginAttempt) {
+                        document.getElementById('login-overlay').classList.add('hidden');
+                        document.getElementById('main-portal').classList.remove('hidden');
+                    }
+
+                    pendingData = data.pending || [];
+                    completedData = data.completed || [];
+                    
+                    renderTables();
+                    
+                    document.getElementById('data-loader').classList.add('hidden');
+                    if(currentTab === 'pending') document.getElementById('view-pending').classList.remove('hidden');
+                    if(currentTab === 'completed') document.getElementById('view-completed').classList.remove('hidden');
+                    
+                })
+                .catch(err => {
+                    document.getElementById('refresh-icon').classList.remove('fa-spin');
+                    if(isLoginAttempt) {
+                        document.getElementById('login-text').innerText = "Authenticate";
+                        document.getElementById('login-loader').classList.add('hidden');
+                        document.getElementById('login-error-msg').innerText = "Network error: Cannot reach database server.";
+                        document.getElementById('login-error').classList.remove('hidden');
+                    } else {
+                        showToast("Failed to sync data with the server.");
+                    }
+                });
+        }
+
+        function renderTables() {
+            // PENDING TABLE
+            const pBody = document.getElementById('table-pending-body');
+            const pEmpty = document.getElementById('pending-empty');
+            pBody.innerHTML = '';
+            
+            if(pendingData.length === 0) {
+                pEmpty.classList.remove('hidden');
+            } else {
+                pEmpty.classList.add('hidden');
+                pendingData.forEach(item => {
+                    pBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition border-b border-slate-50">
+                            <td class="p-6 font-bold text-xs text-slate-500">${item.id}</td>
+                            <td class="p-6 font-black text-sm text-[#1e3a8a]">${item.name}</td>
+                            <td class="p-6 font-bold text-sm text-slate-600">${item.evaluator}</td>
+                            <td class="p-6 font-bold text-xs text-amber-600 bg-amber-50 rounded-lg inline-block mt-4 ml-6 uppercase tracking-widest">${item.phase || 'Annual Cycle'}</td>
+                            <td class="p-6 text-center">
+                                <button onclick="openAuditModal('${item.id}')" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-6 py-2 rounded-lg font-black uppercase text-xs tracking-widest shadow transition transform active:scale-95">
+                                    Audit Record
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // COMPLETED TABLE
+            const cBody = document.getElementById('table-completed-body');
+            const cEmpty = document.getElementById('completed-empty');
+            cBody.innerHTML = '';
+            
+            if(completedData.length === 0) {
+                cEmpty.classList.remove('hidden');
+            } else {
+                cEmpty.classList.add('hidden');
+                completedData.forEach((item, index) => {
+                    cBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition border-b border-slate-50">
+                            <td class="p-6 text-center">
+                                <input type="checkbox" class="batch-checkbox record-checkbox" value="${item.pdfUrl}">
+                            </td>
+                            <td class="p-6 font-bold text-xs text-slate-500">${item.id}</td>
+                            <td class="p-6 font-black text-sm text-green-700">${item.name}</td>
+                            <td class="p-6 font-bold text-xs text-slate-500 uppercase tracking-widest">${item.dateCompleted}</td>
+                            <td class="p-6 text-center">
+                                <a href="${item.pdfUrl}" target="_blank" class="bg-slate-800 hover:bg-slate-900 text-white px-6 py-2 rounded-lg font-black uppercase text-xs tracking-widest shadow transition flex inline-flex items-center gap-2 justify-center">
+                                    <i class="fa-solid fa-file-pdf text-red-400"></i> View PDF
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        /* --- MODAL LOGIC (STRICT) --- */
+        function openAuditModal(recordId) {
+            const endpoint = currentSystem === 'annual' ? ANNUAL_SCRIPT_URL : PROBATION_SCRIPT_URL;
+            const iframeUrl = `${endpoint}?view=admin&id=${recordId}`;
+            
+            document.getElementById('iframe-loader').style.display = 'flex';
+            document.getElementById('audit-iframe').src = iframeUrl;
+            document.getElementById('audit-modal').classList.remove('hidden');
+            document.getElementById('audit-modal').classList.add('flex');
+            
+            // Prevent scrolling on background body
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAuditModal() {
+            let proceed = true;
+            try {
+                // We use standard confirm, but wrap it in try-catch in case it's blocked by the iframe environment
+                proceed = confirm("Are you sure you want to close the verification gateway? Any unsaved signatures will be lost.");
+            } catch (e) {
+                // If confirm is blocked, fallback to direct close
+                proceed = true;
+            }
+            
+            if(proceed) {
+                document.getElementById('audit-modal').classList.add('hidden');
+                document.getElementById('audit-modal').classList.remove('flex');
+                document.getElementById('audit-iframe').src = ""; // Stop background loading
+                document.body.style.overflow = 'auto'; // Restore scroll
+                refreshData(); // Auto-refresh to clear out the item if they signed it
+            }
+        }
+
+        /* --- BATCH PRINT LOGIC --- */
+        function toggleSelectAll() {
+            const isChecked = document.getElementById('selectAllCheckbox').checked;
+            const checkboxes = document.querySelectorAll('.record-checkbox');
+            checkboxes.forEach(cb => cb.checked = isChecked);
+        }
+
+        function executeBatchPrint() {
+            const checkboxes = document.querySelectorAll('.record-checkbox:checked');
+            const urlsToPrint = Array.from(checkboxes).map(cb => cb.value).filter(url => url);
+
+            if(urlsToPrint.length === 0) {
+                showToast("Please select at least one record to batch print.");
+                return;
+            }
+
+            // Browsers block multiple tabs opening at once. We warn the user to allow popups.
+            if(urlsToPrint.length > 1) {
+                let proceed = true;
+                try {
+                    proceed = confirm(`You have selected ${urlsToPrint.length} records to batch print.\n\nIMPORTANT: Your browser may try to block these popups. Please ensure you select "Always allow popups from this site" if a warning appears in your URL bar.\n\nProceed to open PDFs?`);
+                } catch(e) {}
+                
+                if(!proceed) return;
+            }
+
+            // Open selected PDFs in new tabs with a tiny delay to help bypass basic popup blockers
+            urlsToPrint.forEach((url, index) => {
+                setTimeout(() => {
+                    window.open(url, '_blank');
+                }, index * 300); // 300ms stagger between opening tabs
+            });
+            
+            // Uncheck them after firing
+            document.getElementById('selectAllCheckbox').checked = false;
+            toggleSelectAll();
+        }
+
     </script>
 </body>
 </html>
