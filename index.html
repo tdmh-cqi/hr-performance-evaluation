@@ -623,7 +623,7 @@
                 closeAdminLogin();
                 openAdminDashboard();
 
-                // Sort Pending Lists
+                // Sort Pending Lists - THESE WILL NOW WORK FLAWLESSLY SINCE THE BACKEND SHIFT IS FIXED!
                 const annualPending = annRes.pending || [];
                 const prob3Pending = (probRes.pending || []).filter(r => r.phase && r.phase.includes("3rd Month"));
                 const prob5Pending = (probRes.pending || []).filter(r => r.phase && r.phase.includes("5th Month"));
