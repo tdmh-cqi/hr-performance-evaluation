@@ -251,26 +251,28 @@
 <body class="flex flex-col min-h-screen relative">
 
     <script>
+        // CRITICAL: Ensure these URLs match your LIVE Google Apps Script deployments exactly.
         const URL_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const URL_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
 
-    <!-- HEADER AREA -->
     <header class="pt-24 pb-16 px-8 text-center relative">
         <button onclick="showAdminLogin()" class="hr-admin-top-btn">
             <i class="fa-solid fa-lock text-xs"></i>
-            <span>HR Admin Access</span>
+            <span class="hidden sm:inline">HR Admin Access</span>
+            <span class="sm:hidden">HR</span>
         </button>
 
         <div class="max-w-5xl mx-auto">
             <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" 
-                 alt="TDMH Logo" class="h-32 md:h-40 mx-auto mb-8 drop-shadow-sm">
+                 onerror="this.onerror=null; this.src='https://placehold.co/400x150/ffffff/1e3a8a?text=TDMH+Logo'"
+                 alt="TDMH Logo" class="h-24 sm:h-32 md:h-40 mx-auto mb-8 drop-shadow-sm">
             
             <div class="flex flex-col items-center">
-                <h1 class="brand-serif text-2xl md:text-3xl font-black text-[#0f172a] leading-tight tracking-tight uppercase">
+                <h1 class="brand-serif text-xl sm:text-2xl md:text-3xl font-black text-[#0f172a] leading-tight tracking-tight uppercase">
                     Performance Evaluation Portal
                 </h1>
-                <p class="brand-serif text-lg md:text-xl font-black text-[#1e3a8a] mt-2 opacity-90">
+                <p class="brand-serif text-base sm:text-lg md:text-xl font-black text-[#1e3a8a] mt-2 opacity-90">
                     (P.E.P.)
                 </p>
                 <div class="fancy-divider">
@@ -280,9 +282,8 @@
         </div>
     </header>
 
-    <!-- DASHBOARD GRID -->
     <main class="flex-grow flex items-center justify-center pb-24 pt-4 px-6 md:px-12">
-        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
             
             <!-- ANNUAL / REGULAR -->
             <div class="eval-card card-blue group" onclick="launchApplication('annual')">
@@ -323,38 +324,36 @@
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-[#0f172a] text-white py-16 px-10 text-center border-t-8 border-[#1e3a8a]">
+    <footer class="bg-[#0f172a] text-white py-16 px-6 sm:px-10 text-center border-t-8 border-[#1e3a8a]">
         <div class="max-w-5xl mx-auto space-y-8">
-            <div class="inline-block border border-slate-700 px-8 py-4 rounded-full bg-slate-800/20">
-                <p class="text-[#fbbf24] tracking-[0.05em] text-[11px] md:text-sm uppercase">
+            <div class="inline-block border border-slate-700 px-6 sm:px-8 py-4 rounded-full bg-slate-800/20">
+                <p class="text-[#fbbf24] tracking-[0.05em] text-[9px] sm:text-[11px] md:text-sm uppercase">
                     <span class="brand-serif-normal">Continuous Quality Improvement</span>
                     <span class="text-white font-black font-sans mx-1">(CQI)</span>
                     <span class="brand-serif-normal">Optimization</span>
                 </p>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+                <p class="text-[7px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-[0.1em] sm:tracking-[0.2em]">
                     © 2026 TAYTAY DOCTORS MULTISPECIALTY HOSPITAL. ALL RIGHTS RESERVED.
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- ADMIN LOGIN MODAL -->
     <div id="admin-login-modal">
         <div class="modal-backdrop">
-            <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-10 text-center relative shadow-2xl">
+            <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 sm:p-10 text-center relative shadow-2xl">
                 <button onclick="closeAdminLogin()" class="absolute top-6 right-6 text-slate-300 text-3xl hover:text-red-500 transition-colors">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-                <h3 class="text-xl font-black uppercase mb-1 tracking-tighter">HR Authorization</h3>
+                <h3 class="text-lg sm:text-xl font-black uppercase mb-1 tracking-tighter">HR Authorization</h3>
                 <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.1em] mb-8">Access Master Records</p>
                 
                 <input type="password" id="admin-pin-display" placeholder="••••••••" 
-                       class="clean-input text-2xl tracking-[0.8em] mb-6 focus:border-slate-900">
+                       class="clean-input text-xl sm:text-2xl tracking-[0.8em] mb-6 focus:border-slate-900">
                 
-                <button onclick="verifyAdminPin()" id="btn-verify-pin" class="w-full bg-[#1e3a8a] text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-blue-950 active:scale-95 transition-all">
+                <button onclick="verifyAdminPin()" id="btn-verify-pin" class="w-full bg-[#1e3a8a] text-white font-black py-4 sm:py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-blue-950 active:scale-95 transition-all">
                     Unlock Portal
                 </button>
                 <p id="admin-login-error" class="text-red-600 font-bold text-[10px] mt-6 uppercase hidden tracking-widest">Unauthorized Entry</p>
@@ -362,73 +361,64 @@
         </div>
     </div>
 
-    <!-- MASTER ADMIN MODAL (WITH TABS FOR BATCH PRINT) -->
     <div id="admin-modal">
         <div class="modal-backdrop">
-            <div class="bg-white w-full max-w-6xl rounded-[3rem] p-8 md:p-12 relative shadow-2xl border-[10px] border-slate-50 overflow-hidden flex flex-col max-h-[90vh]">
-                <button onclick="closeAdminDashboard()" class="absolute top-8 right-8 text-slate-300 hover:text-red-500 text-4xl transition-all z-10">
+            <div class="bg-white w-full max-w-6xl rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-8 md:p-12 relative shadow-2xl border-[6px] sm:border-[10px] border-slate-50 overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]">
+                <button onclick="closeAdminDashboard()" class="absolute top-6 sm:top-8 right-6 sm:right-8 text-slate-300 hover:text-red-500 text-3xl sm:text-4xl transition-all z-10">
                     <i class="fa-solid fa-circle-xmark"></i>
                 </button>
                 
-                <div class="mb-6">
-                    <h2 class="text-3xl font-black text-slate-900 uppercase mb-2 tracking-tighter">Master HR Dashboard</h2>
-                    <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Departmental Data Hub</p>
+                <div class="mb-6 pr-10">
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900 uppercase mb-2 tracking-tighter">Master HR Dashboard</h2>
+                    <p class="text-slate-400 font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">Departmental Data Hub</p>
                 </div>
 
                 <!-- TABS SYSTEM -->
-                <div class="flex gap-4 mb-6 border-b-2 border-slate-100 pb-2">
-                    <button id="tab-btn-pending" onclick="switchAdminTab('pending')" class="text-[#1e3a8a] font-black uppercase tracking-widest text-xs md:text-sm border-b-4 border-[#1e3a8a] px-4 py-2 transition-all">
+                <div class="flex gap-2 sm:gap-4 mb-6 border-b-2 border-slate-100 pb-2 overflow-x-auto">
+                    <button id="tab-btn-pending" onclick="switchAdminTab('pending')" class="whitespace-nowrap text-[#1e3a8a] font-black uppercase tracking-widest text-[10px] sm:text-xs md:text-sm border-b-4 border-[#1e3a8a] px-3 sm:px-4 py-2 transition-all">
                         Pending Verifications
                     </button>
-                    <button id="tab-btn-completed" onclick="switchAdminTab('completed')" class="text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm border-b-4 border-transparent px-4 py-2 hover:text-[#1e3a8a] transition-all">
+                    <button id="tab-btn-completed" onclick="switchAdminTab('completed')" class="whitespace-nowrap text-slate-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs md:text-sm border-b-4 border-transparent px-3 sm:px-4 py-2 hover:text-[#1e3a8a] transition-all">
                         Completed & Print
                     </button>
                 </div>
                 
-                <!-- TAB 1: PENDING VERIFICATIONS (Original 3-Column Grid) -->
+                <!-- TAB 1: PENDING VERIFICATIONS -->
                 <div id="admin-view-pending" class="flex-grow overflow-y-auto pr-2 rounded-[1.5rem]">
                     <div class="border border-slate-100 rounded-[1.5rem] overflow-hidden">
-                        <table class="admin-grid-table">
-                            <thead>
-                                <tr>
-                                    <th>Annual / Regular</th>
-                                    <th>3rd Month (Prob)</th>
-                                    <th>5th Month (Prob)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-pending">
-                                <!-- Dynamic Content Injected Here -->
-                                <tr>
-                                    <td colspan="3">
-                                        <div class="text-slate-200 py-16">
-                                            <i class="fa-solid fa-database text-5xl mb-4 block"></i>
-                                            <span class="text-[9px] font-black uppercase tracking-[0.3em]">No Pending Verification Requests</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="admin-grid-table min-w-[600px]">
+                                <thead>
+                                    <tr>
+                                        <th>Annual / Regular</th>
+                                        <th>3rd Month (Prob)</th>
+                                        <th>5th Month (Prob)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-pending">
+                                    <!-- Dynamic Content Injected Here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <!-- TAB 2: COMPLETED RECORDS / BATCH PRINT -->
                 <div id="admin-view-completed" class="flex-grow overflow-y-auto pr-2 hidden flex flex-col h-full">
-                    
-                    <!-- Batch Print Toolbar -->
                     <div class="bg-green-50 p-4 md:p-6 border-b-2 border-green-100 flex flex-col sm:flex-row justify-between items-center gap-4 rounded-t-2xl shrink-0">
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start">
                             <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()" class="batch-checkbox">
-                            <label for="selectAllCheckbox" class="font-black text-green-900 uppercase text-xs md:text-sm tracking-widest cursor-pointer select-none">Select All Records</label>
+                            <label for="selectAllCheckbox" class="font-black text-green-900 uppercase text-xs md:text-sm tracking-widest cursor-pointer select-none">Select All</label>
                         </div>
-                        <button onclick="executeBatchPrint()" class="bg-[#16a34a] hover:bg-green-700 text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition active:scale-95 flex items-center gap-2">
+                        <button onclick="executeBatchPrint()" class="w-full sm:w-auto bg-[#16a34a] hover:bg-green-700 text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-print"></i> Batch Print Selected
                         </button>
                     </div>
 
                     <div class="overflow-x-auto border-x border-b border-slate-100 rounded-b-2xl flex-grow bg-white">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
                             <thead>
-                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b-2 border-slate-100">
+                                <tr class="bg-slate-50 text-slate-500 text-[10px] sm:text-xs uppercase tracking-widest border-b-2 border-slate-100">
                                     <th class="p-4 font-black w-10 text-center"><i class="fa-solid fa-check-square"></i></th>
                                     <th class="p-4 font-black">Record ID</th>
                                     <th class="p-4 font-black">Evaluatee Name</th>
@@ -443,44 +433,40 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <!-- SECURITY GATEWAY MODAL (Employee Access) -->
     <div id="security-modal">
         <div class="modal-backdrop">
-            <div class="bg-white w-full max-w-md rounded-[2.5rem] p-12 text-center relative shadow-2xl">
-                <button onclick="closeSecurityGateway()" class="absolute top-8 right-8 text-slate-300 text-3xl hover:text-red-500 transition-colors">
+            <div class="bg-white w-full max-w-md rounded-[2rem] sm:rounded-[2.5rem] p-8 sm:p-12 text-center relative shadow-2xl">
+                <button onclick="closeSecurityGateway()" class="absolute top-6 sm:top-8 right-6 sm:right-8 text-slate-300 text-2xl sm:text-3xl hover:text-red-500 transition-colors">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-                <h3 class="text-xl font-black uppercase mb-1 tracking-tighter">Identity Verification</h3>
+                <h3 class="text-lg sm:text-xl font-black uppercase mb-1 tracking-tighter">Identity Verification</h3>
                 <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.1em] mb-8">Enter Evaluation Reference ID</p>
                 
                 <input type="text" id="record-id-field" placeholder="••••••••" 
-                       class="clean-input text-xl uppercase tracking-widest mb-6">
+                       class="clean-input text-lg sm:text-xl uppercase tracking-widest mb-6">
                 
-                <button onclick="validateAndLaunch()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-slate-700 active:scale-95 transition-all">
+                <button onclick="validateAndLaunch()" class="w-full bg-slate-900 text-white font-black py-4 sm:py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-slate-700 active:scale-95 transition-all">
                     Access Record
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- APP OVERLAY (The Iframe holding the Form) -->
     <div id="app-overlay">
-        <div class="bg-slate-900 text-white h-20 flex justify-between items-center px-8 md:px-12 shrink-0 border-b-4 border-blue-600/20 shadow-xl">
-            <div class="flex items-center gap-5">
-                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" class="h-8 bg-white p-1 rounded">
+        <div class="bg-slate-900 text-white h-16 sm:h-20 flex justify-between items-center px-6 sm:px-12 shrink-0 border-b-4 border-blue-600/20 shadow-xl">
+            <div class="flex items-center gap-3 sm:gap-5">
+                <img src="https://raw.githubusercontent.com/tdmh-cqi/hr-performance-evaluation/main/images%20logo/tdmh-logo.png" onerror="this.onerror=null; this.src='https://placehold.co/100x50/ffffff/1e3a8a?text=Logo'" class="h-6 sm:h-8 bg-white p-1 rounded">
                 <div class="flex flex-col">
-                    <span class="text-[9px] font-black uppercase tracking-[0.3em] text-blue-400 leading-none mb-1">Authenticated</span>
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest block">Secure Data Stream</span>
+                    <span class="text-[7px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-blue-400 leading-none mb-1">Authenticated</span>
+                    <span class="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest block">Secure Data Stream</span>
                 </div>
             </div>
             
-            <!-- FALLBACK CLOSE ICON (With Strict Fix applied) -->
-            <button onclick="forceCloseOverlay()" class="text-slate-500 hover:text-red-500 transition-colors text-xl" title="Force Close Session">
+            <button onclick="forceCloseOverlay()" class="text-slate-500 hover:text-red-500 transition-colors text-lg sm:text-xl p-2" title="Force Close Session">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -489,47 +475,86 @@
         </div>
     </div>
 
+    <div id="custom-msg-modal" class="hidden fixed inset-0 z-[60000] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-[2rem] p-6 sm:p-8 max-w-sm sm:max-w-md w-full shadow-2xl text-center fade-in-scale">
+            <div id="custom-msg-icon" class="text-3xl sm:text-4xl mb-4"></div>
+            <h3 id="custom-msg-title" class="text-lg sm:text-xl font-black uppercase text-slate-900 mb-2 tracking-tight"></h3>
+            <p id="custom-msg-text" class="text-slate-600 font-bold text-xs sm:text-sm mb-6 sm:mb-8 whitespace-pre-line leading-relaxed"></p>
+            <div id="custom-msg-buttons" class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"></div>
+        </div>
+    </div>
+    <style>
+        .fade-in-scale { animation: fadeInScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+    </style>
+
     <script>
+        // Custom Modal Logic (Replaces native alerts and confirms which get blocked in iframes)
+        function showCustomMsg(title, text, type = 'alert', onConfirm = null) {
+            const modal = document.getElementById('custom-msg-modal');
+            const titleEl = document.getElementById('custom-msg-title');
+            const textEl = document.getElementById('custom-msg-text');
+            const buttonsEl = document.getElementById('custom-msg-buttons');
+            const iconEl = document.getElementById('custom-msg-icon');
+
+            titleEl.innerText = title;
+            textEl.innerText = text;
+            buttonsEl.innerHTML = '';
+
+            if (type === 'alert') {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-exclamation text-amber-500 drop-shadow-md"></i>';
+                const btn = document.createElement('button');
+                btn.className = 'w-full sm:w-auto bg-slate-900 text-white font-black px-8 py-3 rounded-xl uppercase tracking-widest text-xs hover:bg-slate-800 transition active:scale-95 shadow-md';
+                btn.innerText = 'OK';
+                btn.onclick = () => { modal.classList.add('hidden'); };
+                buttonsEl.appendChild(btn);
+            } else if (type === 'confirm') {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-question text-[#1e3a8a] drop-shadow-md"></i>';
+                
+                const btnCancel = document.createElement('button');
+                btnCancel.className = 'w-full sm:w-auto bg-slate-100 text-slate-700 font-black px-6 py-3 rounded-xl uppercase tracking-widest text-xs hover:bg-slate-200 transition active:scale-95';
+                btnCancel.innerText = 'Cancel';
+                btnCancel.onclick = () => { modal.classList.add('hidden'); };
+                
+                const btnConfirm = document.createElement('button');
+                btnConfirm.className = 'w-full sm:w-auto bg-red-600 text-white font-black px-6 py-3 rounded-xl uppercase tracking-widest text-xs hover:bg-red-700 transition active:scale-95 shadow-md';
+                btnConfirm.innerText = 'Proceed';
+                btnConfirm.onclick = () => { 
+                    modal.classList.add('hidden'); 
+                    if(onConfirm) onConfirm(); 
+                };
+                
+                buttonsEl.appendChild(btnCancel);
+                buttonsEl.appendChild(btnConfirm);
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        // Modal Display Functions
         function showAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
             document.getElementById('admin-login-error').classList.add('hidden');
             document.getElementById('admin-pin-display').value = '';
             setTimeout(() => document.getElementById('admin-pin-display').focus(), 200);
         }
+        function closeAdminLogin() { document.getElementById('admin-login-modal').style.display = 'none'; }
+        function openAdminDashboard() { document.getElementById('admin-modal').style.display = 'block'; switchAdminTab('pending'); }
+        function closeAdminDashboard() { document.getElementById('admin-modal').style.display = 'none'; document.getElementById('btn-verify-pin').innerText = "Unlock Portal"; }
+        function openSecurityGateway() { document.getElementById('security-modal').style.display = 'block'; setTimeout(() => document.getElementById('record-id-field').focus(), 200); }
+        function closeSecurityGateway() { document.getElementById('security-modal').style.display = 'none'; }
 
-        function closeAdminLogin() {
-            document.getElementById('admin-login-modal').style.display = 'none';
-        }
-
+        // Core App Logic
         function verifyAdminPin() {
             const pin = document.getElementById('admin-pin-display').value;
             const btn = document.getElementById('btn-verify-pin');
             
             if (pin === "TDMHCQI/HR2025") {
                 btn.innerText = "Verifying...";
-                fetchDashboardData(pin); // Fetch real data with the correct PIN
+                fetchDashboardData(pin);
             } else {
                 document.getElementById('admin-login-error').classList.remove('hidden');
             }
-        }
-
-        function openAdminDashboard() {
-            document.getElementById('admin-modal').style.display = 'block';
-            switchAdminTab('pending'); // default tab
-        }
-        
-        function closeAdminDashboard() { 
-            document.getElementById('admin-modal').style.display = 'none'; 
-            document.getElementById('btn-verify-pin').innerText = "Unlock Portal"; // Reset login button
-        }
-        
-        function openSecurityGateway() { 
-            document.getElementById('security-modal').style.display = 'block'; 
-            setTimeout(() => document.getElementById('record-id-field').focus(), 200);
-        }
-        
-        function closeSecurityGateway() { 
-            document.getElementById('security-modal').style.display = 'none'; 
         }
 
         function validateAndLaunch() {
@@ -540,7 +565,7 @@
             if (id.startsWith('ANN')) context = 'annual';
             else if (id.startsWith('PROB')) context = 'probation';
             else {
-                alert("Invalid Reference ID Format. Ensure it starts with ANN- or PROB-");
+                showCustomMsg("Invalid ID", "Invalid Reference ID Format. Ensure it starts with ANN- or PROB-", "alert");
                 return;
             }
 
@@ -562,23 +587,28 @@
             iframe.src = url;
         }
 
-        // STRICT CLOSE FIX APPLIED HERE
+        // Safer Closure Method relying on Custom Modals
         function forceCloseOverlay() {
-            if(confirm("Are you sure you want to close the gateway? Any unsaved progress (like digital signatures) will be lost.")) {
-                document.getElementById('app-overlay').style.display = 'none';
-                document.getElementById('portal-iframe-host').src = 'about:blank';
-                try {
-                    if (!window.location.href.startsWith('blob:')) {
-                        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                        window.history.pushState({path: cleanUrl}, '', cleanUrl);
+            showCustomMsg(
+                "Close Gateway?", 
+                "Are you sure you want to close the gateway? Any unsaved progress (like digital signatures) will be lost.", 
+                "confirm", 
+                () => {
+                    document.getElementById('app-overlay').style.display = 'none';
+                    document.getElementById('portal-iframe-host').src = 'about:blank';
+                    try {
+                        if (!window.location.href.startsWith('blob:')) {
+                            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                            window.history.pushState({path: cleanUrl}, '', cleanUrl);
+                        }
+                    } catch (e) {
+                        console.warn('History state update skipped.');
                     }
-                } catch (e) {
-                    console.warn('History state update skipped due to restricted environment.');
                 }
-            }
+            );
         }
 
-        // HR TAB SYSTEM
+        // HR Dashboard Tab Management
         function switchAdminTab(tab) {
             const btnPending = document.getElementById('tab-btn-pending');
             const btnCompleted = document.getElementById('tab-btn-completed');
@@ -586,30 +616,29 @@
             const viewCompleted = document.getElementById('admin-view-completed');
 
             if(tab === 'pending') {
-                btnPending.className = "text-[#1e3a8a] font-black uppercase tracking-widest text-xs md:text-sm border-b-4 border-[#1e3a8a] px-4 py-2 transition-all";
-                btnCompleted.className = "text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm border-b-4 border-transparent px-4 py-2 hover:text-[#1e3a8a] transition-all";
+                btnPending.className = "whitespace-nowrap text-[#1e3a8a] font-black uppercase tracking-widest text-[10px] sm:text-xs md:text-sm border-b-4 border-[#1e3a8a] px-3 sm:px-4 py-2 transition-all";
+                btnCompleted.className = "whitespace-nowrap text-slate-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs md:text-sm border-b-4 border-transparent px-3 sm:px-4 py-2 hover:text-[#1e3a8a] transition-all";
                 viewPending.style.display = 'block';
                 viewCompleted.classList.add('hidden');
                 viewCompleted.classList.remove('flex');
             } else {
-                btnCompleted.className = "text-[#1e3a8a] font-black uppercase tracking-widest text-xs md:text-sm border-b-4 border-[#1e3a8a] px-4 py-2 transition-all";
-                btnPending.className = "text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm border-b-4 border-transparent px-4 py-2 hover:text-[#1e3a8a] transition-all";
+                btnCompleted.className = "whitespace-nowrap text-[#1e3a8a] font-black uppercase tracking-widest text-[10px] sm:text-xs md:text-sm border-b-4 border-[#1e3a8a] px-3 sm:px-4 py-2 transition-all";
+                btnPending.className = "whitespace-nowrap text-slate-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs md:text-sm border-b-4 border-transparent px-3 sm:px-4 py-2 hover:text-[#1e3a8a] transition-all";
                 viewPending.style.display = 'none';
                 viewCompleted.classList.remove('hidden');
                 viewCompleted.classList.add('flex');
             }
         }
 
-        // FETCH LOGIC
+        // Data Fetching (Optimized with Promise.all for speed)
         async function fetchDashboardData(pin) {
             const tbodyPending = document.getElementById('tbody-pending');
             const tbodyCompleted = document.getElementById('tbody-completed');
             
-            tbodyPending.innerHTML = '<tr><td colspan="3"><div class="py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Syncing Secure Records...</p></div></td></tr>';
-            tbodyCompleted.innerHTML = '<tr><td colspan="6" class="text-center py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-green-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading Completed Database...</p></td></tr>';
+            tbodyPending.innerHTML = '<tr><td colspan="3"><div class="py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-4"></i><p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Syncing Secure Records...</p></div></td></tr>';
+            tbodyCompleted.innerHTML = '<tr><td colspan="6" class="text-center py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-green-500 mb-4"></i><p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Loading Completed Database...</p></td></tr>';
 
             try {
-                // Fetch from both scripts concurrently
                 const [annRes, probRes] = await Promise.all([
                     fetch(URL_ANNUAL + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => ({error: true})),
                     fetch(URL_PROBATION + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => ({error: true}))
@@ -619,16 +648,12 @@
                     throw new Error("Unable to connect to Google Sheets databases.");
                 }
 
-                // If successful, open dashboard and hide login
                 closeAdminLogin();
                 openAdminDashboard();
 
-                // Sort Pending Lists - THESE WILL NOW WORK FLAWLESSLY SINCE THE BACKEND SHIFT IS FIXED!
                 const annualPending = annRes.pending || [];
                 const prob3Pending = (probRes.pending || []).filter(r => r.phase && r.phase.includes("3rd Month"));
                 const prob5Pending = (probRes.pending || []).filter(r => r.phase && r.phase.includes("5th Month"));
-
-                // Sort Completed Lists
                 const allCompleted = [...(annRes.completed || []), ...(probRes.completed || [])];
 
                 renderPendingTable(annualPending, prob3Pending, prob5Pending);
@@ -641,15 +666,14 @@
             }
         }
 
-        // RENDER PENDING TAB
+        // Table Renderers
         function renderPendingTable(annual, prob3, prob5) {
             const tbody = document.getElementById('tbody-pending');
             tbody.innerHTML = '';
-
             const maxRows = Math.max(annual.length, prob3.length, prob5.length);
 
             if (maxRows === 0) {
-                tbody.innerHTML = '<tr><td colspan="3"><div class="text-slate-200 py-16"><i class="fa-solid fa-database text-5xl mb-4 block"></i><span class="text-[9px] font-black uppercase tracking-[0.3em]">No Pending Verification Requests</span></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3"><div class="text-slate-200 py-16"><i class="fa-solid fa-database text-4xl sm:text-5xl mb-4 block"></i><span class="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em]">No Pending Verification Requests</span></div></td></tr>';
                 return;
             }
 
@@ -666,48 +690,50 @@
 
         function renderCellItem(item, context) {
             if (!item) return '';
+            const isAwaitingEmp = item.phase && item.phase.includes('Awaiting');
+            const badgeClass = isAwaitingEmp ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800';
+            const badgeText = isAwaitingEmp ? 'AWAITING EMP' : 'PENDING HR';
+
             return `
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left hover:border-blue-500 transition-all group shadow-sm hover:shadow-md">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="font-black text-[#1e3a8a] text-sm leading-tight">${item.name}</div>
-                        <span class="bg-blue-100 text-blue-800 text-[9px] font-bold px-1.5 py-0.5 rounded">PENDING</span>
+                <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 text-left hover:border-blue-500 transition-all group shadow-sm hover:shadow-md">
+                    <div class="flex flex-col xl:flex-row justify-between xl:items-start mb-2 gap-2 xl:gap-0">
+                        <div class="font-black text-[#1e3a8a] text-xs sm:text-sm leading-tight break-words">${item.name}</div>
+                        <span class="${badgeClass} text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded transition-colors duration-300 self-start xl:self-auto shrink-0 whitespace-nowrap">${badgeText}</span>
                     </div>
-                    <div class="text-[10px] text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
-                        Evaluator: <span class="text-slate-600 font-bold">${item.evaluator || 'N/A'}</span>
+                    <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2 truncate">
+                        Eval: <span class="text-slate-600 font-bold">${item.evaluator || 'N/A'}</span>
                     </div>
                     <button onclick="closeAdminDashboard(); launchApplication('${context}', '?view=admin&id=${item.id}')" 
-                            class="w-full bg-[#1e3a8a] text-white text-[10px] font-bold py-3 rounded-lg uppercase tracking-widest opacity-90 group-hover:opacity-100 transition-all hover:bg-blue-800">
-                        Review Record <i class="fa-solid fa-arrow-right ml-1"></i>
+                            class="w-full bg-[#1e3a8a] text-white text-[9px] sm:text-[10px] font-bold py-2.5 sm:py-3 rounded-lg uppercase tracking-widest opacity-90 group-hover:opacity-100 transition-all hover:bg-blue-800 flex items-center justify-center gap-1">
+                        Review <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
             `;
         }
 
-        // RENDER COMPLETED TAB
         function renderCompletedTable(completedRecords) {
             const tbody = document.getElementById('tbody-completed');
             tbody.innerHTML = '';
             
             if(completedRecords.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-16 text-slate-400"><i class="fa-solid fa-folder-open text-5xl mb-4 opacity-50"></i><p class="font-bold text-lg">No completed records found.</p></td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-16 text-slate-400"><i class="fa-solid fa-folder-open text-4xl sm:text-5xl mb-4 opacity-50"></i><p class="font-bold text-base sm:text-lg">No completed records found.</p></td></tr>`;
                 return;
             }
             
             completedRecords.forEach((item) => {
                 const badgeColor = item.id.startsWith('ANN') ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800';
-                
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition border-b border-slate-50">
-                        <td class="p-4 text-center">
+                        <td class="p-3 sm:p-4 text-center">
                             <input type="checkbox" class="batch-checkbox record-checkbox" value="${item.pdfUrl}">
                         </td>
-                        <td class="p-4 font-bold text-xs text-slate-500">${item.id}</td>
-                        <td class="p-4 font-black text-sm text-green-700">${item.name}</td>
-                        <td class="p-4 text-xs font-bold"><span class="${badgeColor} px-2 py-1 rounded uppercase tracking-widest">${item.phase || 'Annual'}</span></td>
-                        <td class="p-4 font-bold text-xs text-slate-500 uppercase tracking-widest">${item.dateCompleted}</td>
-                        <td class="p-4 text-center">
-                            <a href="${item.pdfUrl}" target="_blank" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg font-black uppercase text-[10px] tracking-widest shadow transition inline-flex items-center gap-2 justify-center">
-                                <i class="fa-solid fa-file-pdf text-red-400"></i> View PDF
+                        <td class="p-3 sm:p-4 font-bold text-[10px] sm:text-xs text-slate-500 whitespace-nowrap">${item.id}</td>
+                        <td class="p-3 sm:p-4 font-black text-xs sm:text-sm text-green-700 break-words">${item.name}</td>
+                        <td class="p-3 sm:p-4 text-[10px] sm:text-xs font-bold"><span class="${badgeColor} px-2 py-1 rounded uppercase tracking-widest whitespace-nowrap">${item.phase || 'Annual'}</span></td>
+                        <td class="p-3 sm:p-4 font-bold text-[10px] sm:text-xs text-slate-500 uppercase tracking-widest whitespace-nowrap">${item.dateCompleted}</td>
+                        <td class="p-3 sm:p-4 text-center">
+                            <a href="${item.pdfUrl}" target="_blank" class="bg-slate-800 hover:bg-slate-900 text-white px-3 sm:px-4 py-2 rounded-lg font-black uppercase text-[9px] sm:text-[10px] tracking-widest shadow transition inline-flex items-center gap-1.5 sm:gap-2 justify-center whitespace-nowrap">
+                                <i class="fa-solid fa-file-pdf text-red-400"></i> <span class="hidden sm:inline">View PDF</span><span class="sm:hidden">View</span>
                             </a>
                         </td>
                     </tr>
@@ -715,11 +741,10 @@
             });
         }
 
-        /* --- BATCH PRINT LOGIC --- */
+        // Batch Printing
         function toggleSelectAll() {
             const isChecked = document.getElementById('selectAllCheckbox').checked;
-            const checkboxes = document.querySelectorAll('.record-checkbox');
-            checkboxes.forEach(cb => cb.checked = isChecked);
+            document.querySelectorAll('.record-checkbox').forEach(cb => cb.checked = isChecked);
         }
 
         function executeBatchPrint() {
@@ -727,25 +752,31 @@
             const urlsToPrint = Array.from(checkboxes).map(cb => cb.value).filter(url => url);
 
             if(urlsToPrint.length === 0) {
-                alert("Please select at least one record to batch print.");
+                showCustomMsg("No Selection", "Please select at least one record to batch print.", "alert");
                 return;
             }
 
-            if(urlsToPrint.length > 1) {
-                const proceed = confirm(`You have selected ${urlsToPrint.length} records to print.\n\nIMPORTANT: Your browser may try to block these popups. Please ensure you select "Always allow popups from this site" in your URL bar.\n\nProceed?`);
-                if(!proceed) return;
-            }
+            const printExecution = () => {
+                urlsToPrint.forEach((url, index) => {
+                    setTimeout(() => window.open(url, '_blank'), index * 300);
+                });
+                document.getElementById('selectAllCheckbox').checked = false;
+                toggleSelectAll();
+            };
 
-            urlsToPrint.forEach((url, index) => {
-                setTimeout(() => {
-                    window.open(url, '_blank');
-                }, index * 300);
-            });
-            
-            document.getElementById('selectAllCheckbox').checked = false;
-            toggleSelectAll();
+            if(urlsToPrint.length > 1) {
+                showCustomMsg(
+                    "Batch Print Confirmation", 
+                    `You have selected ${urlsToPrint.length} records to print.\n\nIMPORTANT: Your browser may try to block these popups. Please ensure you select "Always allow popups from this site" in your URL bar.\n\nProceed?`, 
+                    "confirm", 
+                    printExecution
+                );
+            } else {
+                printExecution();
+            }
         }
 
+        // Initialization
         window.onload = function() {
             const urlSearch = new URLSearchParams(window.location.search);
             const autoId = urlSearch.get('id');
@@ -753,16 +784,15 @@
             const view = urlSearch.get('view');
 
             if (autoId && !system) {
-                // Employee Direct Access
                 openSecurityGateway();
                 document.getElementById('record-id-field').value = autoId;
                 setTimeout(() => validateAndLaunch(), 800);
             } else if (system && view === 'admin') {
-                // HR Email Link Access
                 showAdminLogin();
             }
         };
 
+        // Event Listeners for Enter keys
         document.getElementById('admin-pin-display').addEventListener('keypress', (e) => { if(e.key === 'Enter') verifyAdminPin(); });
         document.getElementById('record-id-field').addEventListener('keypress', (e) => { if(e.key === 'Enter') validateAndLaunch(); });
     </script>
