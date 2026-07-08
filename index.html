@@ -174,19 +174,16 @@
         }
 
         /* Modals */
-        #admin-modal, #admin-login-modal {
+        .portal-modal-layer {
             display: none;
             position: fixed;
             inset: 0;
-            z-index: 20000;
+            z-index: 40000;
         }
         
-        #security-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 30000;
-        }
+        #admin-modal { z-index: 20000; }
+        #admin-login-modal { z-index: 20001; }
+        #security-modal { z-index: 30000; }
 
         #app-overlay {
             display: none;
@@ -242,6 +239,22 @@
             accent-color: #1e3a8a;
         }
 
+        /* Hide Scrollbar for Tabs on Mobile */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* System Admin Trigger (Discreet) */
+        .sys-admin-btn {
+            background: transparent;
+            color: #64748b;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            transition: color 0.3s;
+            font-size: 0.8rem;
+        }
+        .sys-admin-btn:hover { color: #fbbf24; }
+
         @media (max-width: 640px) {
             .eval-card h2 { font-size: 1.05rem !important; }
             .fancy-line { width: 80vw; }
@@ -251,6 +264,7 @@
 <body class="flex flex-col min-h-screen relative">
 
     <script>
+        // CORE DATABASE HOOKS
         const URL_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const URL_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
@@ -262,6 +276,13 @@
             <span class="hidden sm:inline">HR Admin Access</span>
             <span class="sm:hidden">HR</span>
         </button>
+
+        <!-- Discreet System Admin Trigger (Desktop) -->
+        <div class="absolute top-25 left-8 z-[9999] hidden sm:block">
+            <button onclick="showSysAdminLogin()" class="sys-admin-btn" title="System Diagnostics">
+                <i class="fa-solid fa-server"></i>
+            </button>
+        </div>
 
         <div class="max-w-5xl mx-auto">
             <img src="https://tdmh-cqi.github.io/hr-performance-evaluation/images%20logo/tdmh-logo.png" 
@@ -334,29 +355,47 @@
                     <span class="brand-serif-normal">Optimization</span>
                 </p>
             </div>
-            <div>
+            <div class="flex justify-center items-center gap-4">
                 <p class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">
                     © 2026 TAYTAY DOCTORS MULTISPECIALTY HOSPITAL. ALL RIGHTS RESERVED.
                 </p>
+                <!-- Discreet System Admin Trigger (Mobile) -->
+                <button onclick="showSysAdminLogin()" class="sys-admin-btn sm:hidden" title="System Diagnostics">
+                    <i class="fa-solid fa-server"></i>
+                </button>
             </div>
         </div>
     </footer>
 
-    <!-- CUSTOM CONFIRM MODAL (Fixes the "X" Close Button issue) -->
-    <div id="custom-confirm-modal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); z-index: 40000; align-items: center; justify-content: center; padding: 24px;">
-        <div class="bg-white rounded-[2rem] p-8 max-w-sm w-full text-center shadow-2xl">
-            <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <h3 class="text-xl font-black text-slate-900 mb-2 uppercase tracking-tighter">Close Gateway?</h3>
-            <p class="text-slate-500 font-bold text-sm mb-6">Any unsaved progress (like digital signatures) will be lost.</p>
-            <div class="flex gap-4">
-                <button onclick="confirmCloseOverlay(false)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black py-3 rounded-xl uppercase tracking-widest text-xs transition">Cancel</button>
-                <button onclick="confirmCloseOverlay(true)" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-xl uppercase tracking-widest text-xs transition">Close</button>
+    <!-- CUSTOM ALERT MODAL -->
+    <div id="custom-alert-modal" class="portal-modal-layer">
+        <div class="modal-backdrop">
+            <div class="bg-white rounded-[2rem] p-8 max-w-sm w-full text-center shadow-2xl relative">
+                <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fa-solid fa-circle-exclamation"></i></div>
+                <h3 id="alert-title" class="text-xl font-black text-slate-900 mb-2 uppercase tracking-tighter">Notice</h3>
+                <p id="alert-message" class="text-slate-500 font-bold text-sm mb-6"></p>
+                <button onclick="document.getElementById('custom-alert-modal').style.display='none'" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-4 rounded-xl uppercase tracking-widest text-xs transition">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRM MODAL -->
+    <div id="custom-confirm-modal" class="portal-modal-layer">
+        <div class="modal-backdrop">
+            <div class="bg-white rounded-[2rem] p-8 max-w-sm w-full text-center shadow-2xl relative">
+                <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3 id="confirm-title" class="text-xl font-black text-slate-900 mb-2 uppercase tracking-tighter">Confirm Action</h3>
+                <p id="confirm-message" class="text-slate-500 font-bold text-sm mb-6"></p>
+                <div class="flex gap-4">
+                    <button onclick="triggerConfirmAction(false)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black py-3 rounded-xl uppercase tracking-widest text-xs transition">Cancel</button>
+                    <button onclick="triggerConfirmAction(true)" id="confirm-yes-btn" class="flex-1 bg-[#1e3a8a] hover:bg-blue-800 text-white font-black py-3 rounded-xl uppercase tracking-widest text-xs transition">Proceed</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- ADMIN LOGIN MODAL -->
-    <div id="admin-login-modal">
+    <div id="admin-login-modal" class="portal-modal-layer">
         <div class="modal-backdrop">
             <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-10 text-center relative shadow-2xl">
                 <button onclick="closeAdminLogin()" class="absolute top-6 right-6 text-slate-300 text-3xl hover:text-red-500 transition-colors">
@@ -376,8 +415,30 @@
         </div>
     </div>
 
-    <!-- MASTER ADMIN MODAL -->
-    <div id="admin-modal">
+    <!-- SYSTEM ADMIN LOGIN MODAL -->
+    <div id="sys-login-modal" class="portal-modal-layer">
+        <div class="modal-backdrop">
+            <div class="bg-slate-900 w-full max-w-sm rounded-[2.5rem] p-10 text-center relative shadow-2xl border-4 border-slate-700">
+                <button onclick="closeSysAdminLogin()" class="absolute top-6 right-6 text-slate-500 text-3xl hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="w-12 h-12 bg-slate-800 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fa-solid fa-terminal"></i></div>
+                <h3 class="text-xl font-black uppercase mb-1 tracking-tighter text-white">System Diagnostics</h3>
+                <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.1em] mb-8">IT / Administrator Access</p>
+                
+                <input type="password" id="sys-pin-display" placeholder="••••••••" 
+                       class="w-full bg-slate-800 border-2 border-slate-600 text-white p-4 rounded-xl text-center font-black text-2xl tracking-[0.8em] outline-none focus:border-blue-500 transition-all mb-6">
+                
+                <button onclick="verifySysPin()" id="btn-verify-sys" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-blue-800 active:scale-95 transition-all">
+                    Initialize Monitor
+                </button>
+                <p id="sys-login-error" class="text-red-400 font-bold text-[10px] mt-6 uppercase hidden tracking-widest">Invalid IT Credentials</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MASTER HR MODAL -->
+    <div id="admin-modal" class="portal-modal-layer">
         <div class="modal-backdrop">
             <div class="bg-white w-full max-w-6xl rounded-[3rem] p-8 md:p-12 relative shadow-2xl border-[10px] border-slate-50 overflow-hidden flex flex-col max-h-[90vh]">
                 <button onclick="closeAdminDashboard()" class="absolute top-8 right-8 text-slate-300 hover:text-red-500 text-4xl transition-all z-10">
@@ -390,7 +451,7 @@
                 </div>
 
                 <!-- TABS SYSTEM -->
-                <div class="flex gap-4 mb-6 border-b-2 border-slate-100 pb-2">
+                <div class="flex gap-4 mb-6 border-b-2 border-slate-100 pb-2 overflow-x-auto no-scrollbar whitespace-nowrap">
                     <button id="tab-btn-pending" onclick="switchAdminTab('pending')" class="text-[#1e3a8a] font-black uppercase tracking-widest text-xs md:text-sm border-b-4 border-[#1e3a8a] px-4 py-2 transition-all">
                         Pending Verifications
                     </button>
@@ -432,7 +493,7 @@
                     </div>
 
                     <div class="overflow-x-auto border-x border-b border-slate-100 rounded-b-2xl flex-grow bg-white">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b-2 border-slate-100">
                                     <th class="p-4 font-black w-10 text-center"><i class="fa-solid fa-check-square"></i></th>
@@ -454,8 +515,54 @@
         </div>
     </div>
 
+    <!-- SYSTEM MONITOR MODAL -->
+    <div id="sys-monitor-modal" class="portal-modal-layer">
+        <div class="modal-backdrop">
+            <div class="bg-white w-full max-w-5xl rounded-[3rem] p-8 md:p-12 relative shadow-2xl border-[10px] border-slate-50 overflow-hidden flex flex-col max-h-[90vh]">
+                <button onclick="closeSysMonitorDashboard()" class="absolute top-8 right-8 text-slate-300 hover:text-red-500 text-4xl transition-all z-10">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </button>
+                
+                <div class="mb-8 border-b-2 border-slate-100 pb-6 flex items-center gap-4">
+                    <div class="w-16 h-16 bg-blue-50 text-[#1e3a8a] rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-server"></i></div>
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 uppercase mb-1 tracking-tighter">System Health Monitor</h2>
+                        <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Live Diagnostics & Connectivity Dashboard</p>
+                    </div>
+                </div>
+
+                <div class="flex-grow overflow-y-auto pr-2 flex flex-col">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Annual System Status -->
+                        <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-[#1e3a8a] text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-bl-xl">Engine 1</div>
+                            <h4 class="text-lg font-black text-slate-800 mb-6 uppercase tracking-tighter"><i class="fa-solid fa-calendar-check text-[#1e3a8a] mr-2"></i> Annual/Regular</h4>
+                            <ul id="monitor-list-annual" class="space-y-4">
+                                <li class="flex items-center gap-3 text-sm font-bold text-slate-400"><i class="fa-solid fa-circle-notch fa-spin"></i> Pinging Google Servers...</li>
+                            </ul>
+                        </div>
+
+                        <!-- Probation System Status -->
+                        <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-bl-xl">Engine 2</div>
+                            <h4 class="text-lg font-black text-slate-800 mb-6 uppercase tracking-tighter"><i class="fa-solid fa-stopwatch text-amber-500 mr-2"></i> Probationary</h4>
+                            <ul id="monitor-list-probation" class="space-y-4">
+                                <li class="flex items-center gap-3 text-sm font-bold text-slate-400"><i class="fa-solid fa-circle-notch fa-spin"></i> Pinging Google Servers...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">System Monitor Engine v2.0</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- SECURITY GATEWAY MODAL (Employee Access) -->
-    <div id="security-modal">
+    <div id="security-modal" class="portal-modal-layer">
         <div class="modal-backdrop">
             <div class="bg-white w-full max-w-md rounded-[2.5rem] p-12 text-center relative shadow-2xl">
                 <button onclick="closeSecurityGateway()" class="absolute top-8 right-8 text-slate-300 text-3xl hover:text-red-500 transition-colors">
@@ -467,7 +574,7 @@
                 <input type="text" id="record-id-field" placeholder="••••••••" 
                        class="clean-input text-xl uppercase tracking-widest mb-6">
                 
-                <button onclick="validateAndLaunch()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-slate-700 active:scale-95 transition-all">
+                <button onclick="validateAndLaunch()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest border-b-4 border-slate-700 active:scale-95 transition-all">
                     Access Record
                 </button>
             </div>
@@ -485,7 +592,7 @@
                 </div>
             </div>
             
-            <button onclick="forceCloseOverlay()" class="text-slate-500 hover:text-red-500 transition-colors text-xl sm:text-2xl p-2" title="Force Close Session">
+            <button onclick="requestForceCloseOverlay()" class="text-slate-500 hover:text-red-500 transition-colors text-xl sm:text-2xl p-2" title="Force Close Session">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -495,6 +602,38 @@
     </div>
 
     <script>
+        // Custom Alert & Confirm Logic to replace native blocked popups
+        let confirmActionCallback = null;
+
+        function showCustomAlert(title, message) {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('custom-alert-modal').style.display = 'block';
+        }
+
+        function showCustomConfirm(title, message, callback, danger = false) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            
+            const yesBtn = document.getElementById('confirm-yes-btn');
+            if(danger) {
+                yesBtn.className = "flex-1 bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-xl uppercase tracking-widest text-xs transition";
+            } else {
+                yesBtn.className = "flex-1 bg-[#1e3a8a] hover:bg-blue-800 text-white font-black py-3 rounded-xl uppercase tracking-widest text-xs transition";
+            }
+
+            confirmActionCallback = callback;
+            document.getElementById('custom-confirm-modal').style.display = 'block';
+        }
+
+        function triggerConfirmAction(result) {
+            document.getElementById('custom-confirm-modal').style.display = 'none';
+            if (confirmActionCallback) {
+                confirmActionCallback(result);
+                confirmActionCallback = null;
+            }
+        }
+
         function showAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
             document.getElementById('admin-login-error').classList.add('hidden');
@@ -517,6 +656,29 @@
                 document.getElementById('admin-login-error').classList.remove('hidden');
             }
         }
+        
+        function showSysAdminLogin() {
+            document.getElementById('sys-login-modal').style.display = 'block';
+            document.getElementById('sys-login-error').classList.add('hidden');
+            document.getElementById('sys-pin-display').value = '';
+            setTimeout(() => document.getElementById('sys-pin-display').focus(), 200);
+        }
+
+        function closeSysAdminLogin() {
+            document.getElementById('sys-login-modal').style.display = 'none';
+        }
+
+        function verifySysPin() {
+            const pin = document.getElementById('sys-pin-display').value;
+            const btn = document.getElementById('btn-verify-sys');
+            
+            if (pin === "TDMHCQI/HR2025") {
+                btn.innerText = "Connecting...";
+                fetchMonitorData();
+            } else {
+                document.getElementById('sys-login-error').classList.remove('hidden');
+            }
+        }
 
         function openAdminDashboard() {
             document.getElementById('admin-modal').style.display = 'block';
@@ -526,6 +688,15 @@
         function closeAdminDashboard() { 
             document.getElementById('admin-modal').style.display = 'none'; 
             document.getElementById('btn-verify-pin').innerText = "Unlock Portal";
+        }
+        
+        function openSysMonitorDashboard() {
+            document.getElementById('sys-monitor-modal').style.display = 'block';
+        }
+
+        function closeSysMonitorDashboard() {
+            document.getElementById('sys-monitor-modal').style.display = 'none';
+            document.getElementById('btn-verify-sys').innerText = "Initialize Monitor";
         }
         
         function openSecurityGateway() { 
@@ -545,7 +716,7 @@
             if (id.startsWith('ANN')) context = 'annual';
             else if (id.startsWith('PROB')) context = 'probation';
             else {
-                alert("Invalid Reference ID Format. Ensure it starts with ANN- or PROB-");
+                showCustomAlert("Validation Error", "Invalid Reference ID Format. Ensure it starts with ANN- or PROB-");
                 return;
             }
 
@@ -567,43 +738,52 @@
             iframe.src = url;
         }
 
-        // Custom Modal Close Fix to bypass iframe strict rules
-        function forceCloseOverlay() {
-            document.getElementById('custom-confirm-modal').style.display = 'flex';
-        }
-
-        function confirmCloseOverlay(agree) {
-            document.getElementById('custom-confirm-modal').style.display = 'none';
-            if(agree) {
-                document.getElementById('app-overlay').style.display = 'none';
-                document.getElementById('portal-iframe-host').src = 'about:blank';
-                try {
-                    if (!window.location.href.startsWith('blob:')) {
-                        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                        window.history.pushState({path: cleanUrl}, '', cleanUrl);
+        // Custom iframe closure
+        function requestForceCloseOverlay() {
+            showCustomConfirm(
+                "Close Gateway?", 
+                "Any unsaved progress (like digital signatures) will be lost.", 
+                (agree) => {
+                    if (agree) {
+                        document.getElementById('app-overlay').style.display = 'none';
+                        document.getElementById('portal-iframe-host').src = 'about:blank';
+                        try {
+                            if (!window.location.href.startsWith('blob:')) {
+                                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                                window.history.pushState({path: cleanUrl}, '', cleanUrl);
+                            }
+                        } catch (e) {
+                            console.warn('History state update skipped.');
+                        }
                     }
-                } catch (e) {
-                    console.warn('History state update skipped due to restricted environment.');
-                }
-            }
+                },
+                true // Danger style
+            );
         }
 
         function switchAdminTab(tab) {
             const btnPending = document.getElementById('tab-btn-pending');
             const btnCompleted = document.getElementById('tab-btn-completed');
+
             const viewPending = document.getElementById('admin-view-pending');
             const viewCompleted = document.getElementById('admin-view-completed');
 
+            // Reset all styles
+            const activeClass = "text-[#1e3a8a] font-black uppercase tracking-widest text-xs md:text-sm border-b-4 border-[#1e3a8a] px-4 py-2 transition-all";
+            const inactiveClass = "text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm border-b-4 border-transparent px-4 py-2 hover:text-[#1e3a8a] transition-all";
+            
+            btnPending.className = inactiveClass;
+            btnCompleted.className = inactiveClass;
+
+            viewPending.style.display = 'none';
+            viewCompleted.classList.add('hidden');
+            viewCompleted.classList.remove('flex');
+
             if(tab === 'pending') {
-                btnPending.className = "text-[#1e3a8a] font-black uppercase tracking-widest text-xs md:text-sm border-b-4 border-[#1e3a8a] px-4 py-2 transition-all";
-                btnCompleted.className = "text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm border-b-4 border-transparent px-4 py-2 hover:text-[#1e3a8a] transition-all";
+                btnPending.className = activeClass;
                 viewPending.style.display = 'block';
-                viewCompleted.classList.add('hidden');
-                viewCompleted.classList.remove('flex');
-            } else {
-                btnCompleted.className = "text-[#1e3a8a] font-black uppercase tracking-widest text-xs md:text-sm border-b-4 border-[#1e3a8a] px-4 py-2 transition-all";
-                btnPending.className = "text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm border-b-4 border-transparent px-4 py-2 hover:text-[#1e3a8a] transition-all";
-                viewPending.style.display = 'none';
+            } else if(tab === 'completed') {
+                btnCompleted.className = activeClass;
                 viewCompleted.classList.remove('hidden');
                 viewCompleted.classList.add('flex');
             }
@@ -617,7 +797,7 @@
             tbodyCompleted.innerHTML = '<tr><td colspan="6" class="text-center py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-green-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading Completed Database...</p></td></tr>';
 
             try {
-                // Concurrent fetching for 2x faster load times
+                // Concurrent fetching for Data endpoints only
                 const [annRes, probRes] = await Promise.all([
                     fetch(URL_ANNUAL + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => ({error: true})),
                     fetch(URL_PROBATION + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => ({error: true}))
@@ -630,10 +810,10 @@
                 closeAdminLogin();
                 openAdminDashboard();
 
+                // Process Pending & Completed
                 const annualPending = annRes.pending || [];
                 const prob3Pending = (probRes.pending || []).filter(r => r.phase && r.phase.includes("3rd Month"));
                 const prob5Pending = (probRes.pending || []).filter(r => r.phase && r.phase.includes("5th Month"));
-
                 const allCompleted = [...(annRes.completed || []), ...(probRes.completed || [])];
 
                 renderPendingTable(annualPending, prob3Pending, prob5Pending);
@@ -644,6 +824,59 @@
                 document.getElementById('admin-login-error').classList.remove('hidden');
                 document.getElementById('btn-verify-pin').innerText = "Unlock Portal";
             }
+        }
+        
+        async function fetchMonitorData() {
+            document.getElementById('monitor-list-annual').innerHTML = '<li class="flex items-center gap-3 text-sm font-bold text-slate-400"><i class="fa-solid fa-circle-notch fa-spin"></i> Pinging Google Servers...</li>';
+            document.getElementById('monitor-list-probation').innerHTML = '<li class="flex items-center gap-3 text-sm font-bold text-slate-400"><i class="fa-solid fa-circle-notch fa-spin"></i> Pinging Google Servers...</li>';
+            
+            try {
+                const [annMonitor, probMonitor] = await Promise.all([
+                    fetch(URL_ANNUAL + `?view=monitor`).then(r => r.json()).catch(e => ({status: 'error'})),
+                    fetch(URL_PROBATION + `?view=monitor`).then(r => r.json()).catch(e => ({status: 'error'}))
+                ]);
+                
+                closeSysAdminLogin();
+                openSysMonitorDashboard();
+                
+                renderMonitorData('annual', annMonitor);
+                renderMonitorData('probation', probMonitor);
+            } catch (e) {
+                document.getElementById('sys-login-error').innerText = "Ping failed. Ensure GAS endpoints are live.";
+                document.getElementById('sys-login-error').classList.remove('hidden');
+                document.getElementById('btn-verify-sys').innerText = "Initialize Monitor";
+            }
+        }
+
+        function renderMonitorData(context, data) {
+            const listId = context === 'annual' ? 'monitor-list-annual' : 'monitor-list-probation';
+            const ul = document.getElementById(listId);
+            
+            if (data.status === 'error') {
+                ul.innerHTML = `
+                    <li class="flex items-center gap-3 text-sm font-bold text-red-500 bg-red-50 p-3 rounded-xl border border-red-100"><i class="fa-solid fa-triangle-exclamation text-lg"></i> Connection Offline / Blocked</li>
+                `;
+                return;
+            }
+
+            const getIcon = (bool) => bool 
+                ? `<div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-check"></i></div>` 
+                : `<div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark"></i></div>`;
+            
+            ul.innerHTML = `
+                <li class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="font-bold text-slate-700">Master Database (Sheet)</span>
+                    ${getIcon(data.sheet)}
+                </li>
+                <li class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="font-bold text-slate-700">Storage Archive (Folder)</span>
+                    ${getIcon(data.folder)}
+                </li>
+                <li class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="font-bold text-slate-700">Document Blueprint (Template)</span>
+                    ${getIcon(data.template)}
+                </li>
+            `;
         }
 
         function renderPendingTable(annual, prob3, prob5) {
@@ -739,23 +972,29 @@
             const urlsToPrint = Array.from(checkboxes).map(cb => cb.value).filter(url => url);
 
             if(urlsToPrint.length === 0) {
-                alert("Please select at least one record to batch print.");
+                showCustomAlert("Action Required", "Please select at least one record to batch print.");
                 return;
             }
 
             if(urlsToPrint.length > 1) {
-                const proceed = confirm(`You have selected ${urlsToPrint.length} records to print.\n\nIMPORTANT: Your browser may try to block these popups. Please ensure you select "Always allow popups from this site" in your URL bar.\n\nProceed?`);
-                if(!proceed) return;
+                showCustomConfirm(
+                    "Batch Print Initialized",
+                    `You have selected ${urlsToPrint.length} records.\n\nIMPORTANT: Your browser may try to block these popups. Please ensure you select "Always allow popups from this site" in your URL bar.`,
+                    (proceed) => {
+                        if(proceed) {
+                            urlsToPrint.forEach((url, index) => {
+                                setTimeout(() => window.open(url, '_blank'), index * 300);
+                            });
+                            document.getElementById('selectAllCheckbox').checked = false;
+                            toggleSelectAll();
+                        }
+                    }
+                );
+            } else {
+                window.open(urlsToPrint[0], '_blank');
+                document.getElementById('selectAllCheckbox').checked = false;
+                toggleSelectAll();
             }
-
-            urlsToPrint.forEach((url, index) => {
-                setTimeout(() => {
-                    window.open(url, '_blank');
-                }, index * 300);
-            });
-            
-            document.getElementById('selectAllCheckbox').checked = false;
-            toggleSelectAll();
         }
 
         window.onload = function() {
@@ -774,6 +1013,7 @@
         };
 
         document.getElementById('admin-pin-display').addEventListener('keypress', (e) => { if(e.key === 'Enter') verifyAdminPin(); });
+        document.getElementById('sys-pin-display').addEventListener('keypress', (e) => { if(e.key === 'Enter') verifySysPin(); });
         document.getElementById('record-id-field').addEventListener('keypress', (e) => { if(e.key === 'Enter') validateAndLaunch(); });
     </script>
 </body>
