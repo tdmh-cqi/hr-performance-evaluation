@@ -264,7 +264,7 @@
 <body class="flex flex-col min-h-screen relative">
 
     <script>
-        // CORE DATABASE HOOKS (UPDATED URLs)
+        // CORE DATABASE HOOKS (UPDATED)
         const URL_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const URL_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
@@ -789,6 +789,10 @@
             }
         }
 
+        // CRITICAL FIX: We explicitly tell fetch to follow the Google Apps Script redirect
+        // to bypass the CORS block issue for Google JSON endpoints.
+        const fetchOpts = { redirect: "follow" };
+
         async function fetchDashboardData(pin) {
             const tbodyPending = document.getElementById('tbody-pending');
             const tbodyCompleted = document.getElementById('tbody-completed');
@@ -797,10 +801,10 @@
             tbodyCompleted.innerHTML = '<tr><td colspan="6" class="text-center py-12"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-green-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading Completed Database...</p></td></tr>';
 
             try {
-                // Concurrent fetching for Data endpoints only
+                // Concurrent fetching for Data endpoints
                 const [annRes, probRes] = await Promise.all([
-                    fetch(URL_ANNUAL + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => ({error: true})),
-                    fetch(URL_PROBATION + `?view=adminData&pin=${encodeURIComponent(pin)}`).then(r => r.json()).catch(e => ({error: true}))
+                    fetch(URL_ANNUAL + `?view=adminData&pin=${encodeURIComponent(pin)}`, fetchOpts).then(r => r.json()).catch(e => ({error: true})),
+                    fetch(URL_PROBATION + `?view=adminData&pin=${encodeURIComponent(pin)}`, fetchOpts).then(r => r.json()).catch(e => ({error: true}))
                 ]);
 
                 if (annRes.error && probRes.error) {
@@ -831,9 +835,10 @@
             document.getElementById('monitor-list-probation').innerHTML = '<li class="flex items-center gap-3 text-sm font-bold text-slate-400"><i class="fa-solid fa-circle-notch fa-spin"></i> Pinging Google Servers...</li>';
             
             try {
+                // CRITICAL FIX: Uses fetchOpts with redirect: "follow"
                 const [annMonitor, probMonitor] = await Promise.all([
-                    fetch(URL_ANNUAL + `?view=monitor`).then(r => r.json()).catch(e => ({status: 'error'})),
-                    fetch(URL_PROBATION + `?view=monitor`).then(r => r.json()).catch(e => ({status: 'error'}))
+                    fetch(URL_ANNUAL + `?view=monitor`, fetchOpts).then(r => r.json()).catch(e => ({status: 'error'})),
+                    fetch(URL_PROBATION + `?view=monitor`, fetchOpts).then(r => r.json()).catch(e => ({status: 'error'}))
                 ]);
                 
                 closeSysAdminLogin();
