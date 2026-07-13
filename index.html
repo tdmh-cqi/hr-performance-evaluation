@@ -264,7 +264,7 @@
 <body class="flex flex-col min-h-screen relative">
 
     <script>
-        // CORE DATABASE HOOKS (UPDATED)
+        // CORE DATABASE HOOKS (UPDATED URLS)
         const URL_ANNUAL = "https://script.google.com/macros/s/AKfycbz8u5KkJCQWcLcJtp9KYIXaFUby8EYoG264UvrD1nBkTOWS1RmzYbQ3cexOYBNM3kvs/exec";
         const URL_PROBATION = "https://script.google.com/macros/s/AKfycbwID1MQoYtJOobLZ_J9tJVlPA-sSGXUaZso6jLnPLb5MPvdVuLgdl9WGxQivcQxHbwrZg/exec";
     </script>
@@ -789,8 +789,7 @@
             }
         }
 
-        // CRITICAL FIX: We explicitly tell fetch to follow the Google Apps Script redirect
-        // to bypass the CORS block issue for Google JSON endpoints.
+        // CRITICAL FIX: To bypass Google Apps Script CORS issues
         const fetchOpts = { redirect: "follow" };
 
         async function fetchDashboardData(pin) {
@@ -835,7 +834,7 @@
             document.getElementById('monitor-list-probation').innerHTML = '<li class="flex items-center gap-3 text-sm font-bold text-slate-400"><i class="fa-solid fa-circle-notch fa-spin"></i> Pinging Google Servers...</li>';
             
             try {
-                // CRITICAL FIX: Uses fetchOpts with redirect: "follow"
+                // CRITICAL FIX: Following redirects for the Monitor Ping
                 const [annMonitor, probMonitor] = await Promise.all([
                     fetch(URL_ANNUAL + `?view=monitor`, fetchOpts).then(r => r.json()).catch(e => ({status: 'error'})),
                     fetch(URL_PROBATION + `?view=monitor`, fetchOpts).then(r => r.json()).catch(e => ({status: 'error'}))
